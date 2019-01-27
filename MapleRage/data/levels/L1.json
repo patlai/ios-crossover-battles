@@ -8,22 +8,30 @@
             "hitpoints": 1000000,
             "animationPrefix": "mushroom/f",
             "animationSuffix": ".png",
+            "deathAnimationPrefix": "mushroom/die",
+            "deathAnimationSuffix": ".png",
             "defaultAnimation": "mushroom/f0.png",
             "hitAnimation": "mushroom/f_hit.png",
             "damageSound": "sound/mushroom_damage.mp3",
             "deathSound": "sound/mushroom_death.mp3",
-            "numberOfAnimationFrames": 6
+            "numberOfAnimationFrames": 6,
+            "numberOfDeathAnimationFrames": 6,
+            "moveSpeed": 5
         },
         {
-            "name": "Super Mushmom",
-            "hitpoints": 2000000,
-            "animationPrefix": "mushroom/f",
+            "name": "Stump",
+            "hitpoints": 500000,
+            "animationPrefix": "sprites/stump/s",
             "animationSuffix": ".png",
-            "defaultAnimation": "mushroom/f0.png",
-            "hitAnimation": "mushroom/f_hit.png",
-            "damageSound": "sound/mushroom_damage.mp3",
-            "deathSound": "sound/mushroom_death.mp3",
-            "numberOfAnimationFrames": 6
+            "deathAnimationPrefix": "sprites/stump/s_die",
+            "deathAnimationSuffix": ".png",
+            "defaultAnimation": "sprites/stump/s0.png",
+            "hitAnimation": "sprites/stump/s_hit.png",
+            "damageSound": "sprites/stump/damage.mp3",
+            "deathSound": "sprites/stump/die.mp3",
+            "numberOfAnimationFrames": 4,
+            "numberOfDeathAnimationFrames": 4,
+            "moveSpeed": 3
         }
     ]
 }

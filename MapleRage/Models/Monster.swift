@@ -21,6 +21,7 @@ class Monster{
     var DeathSound: SKAction
     var HitBox: CGRect
     var HasVerticalMovement: Bool
+    var MoveSpeed: Int
     
     var Width: CGFloat
     var Height: CGFloat
@@ -48,6 +49,7 @@ class Monster{
         self.Width = 0
         self.Height = 0
         self.HasVerticalMovement = false
+        self.MoveSpeed = 0
     }
     
     init (
@@ -59,6 +61,7 @@ class Monster{
         _ DeathAnimation: SKAction,
         _ DamageSound: SKAction,
         _ DeathSound: SKAction,
+        _ moveSpeed: Int = 0,
         _ hasVerticalMovement: Bool = false)
     {
         self.Name = Name
@@ -70,6 +73,7 @@ class Monster{
         self.DamageSound = DamageSound
         self.DeathSound = DeathSound
         self.Node = SKSpriteNode(imageNamed: StartingFrame)
+        self.MoveSpeed = moveSpeed
         self.HasVerticalMovement = hasVerticalMovement
         
         self.Width = self.Node.size.width

@@ -57,11 +57,15 @@ public class Level{
             let hp = Double(monster["hitpoints"] as? Int ?? 0)
             let animationPrefix = monster["animationPrefix"] as? String ?? ""
             let animationSuffix = monster["animationSuffix"] as? String ?? ""
+            let deathAnimationPrefix = monster["deathAnimationPrefix"] as? String ?? ""
+            let deathAnimationSuffix = monster["deathAnimationSuffix"] as? String ?? ""
             let startingFrame = monster["defaultAnimation"] as? String ?? ""
             let damageSound = monster["damageSound"] as? String ?? ""
             let deathSound = monster["deathSound"] as? String ?? ""
             let hitAnimationPath = monster["hitAnimation"] as? String ?? ""
             let numberOfAnimationFrames = monster["numberOfAnimationFrames"] as? Int ?? 0
+            let numberOfDeathAnimationFrames = monster["numberOfDeathAnimationFrames"] as? Int ?? 0
+            let moveSpeed = monster["moveSpeed"] as? Int ?? 0
             
             let currentMonster = Monster(
                 name,
@@ -69,9 +73,10 @@ public class Level{
                 startingFrame,
                 Monster.getDefaultAnimation(animationPrefix, animationSuffix, numberOfAnimationFrames, 0.2),
                 Monster.getSpecialAnimation(hitAnimationPath, 0.2),
-                Monster.getSpecialAnimation(hitAnimationPath, 0.2),
+                Monster.getDefaultAnimation(deathAnimationPrefix, deathAnimationSuffix, numberOfDeathAnimationFrames, 0.2),
                 Monster.getSoundClip(damageSound),
-                Monster.getSoundClip(deathSound)
+                Monster.getSoundClip(deathSound),
+                moveSpeed
             )
             
             levelMonsters.append(currentMonster)

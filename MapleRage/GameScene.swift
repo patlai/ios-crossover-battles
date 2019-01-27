@@ -1,6 +1,8 @@
 import SpriteKit
 
 class GameScene: SKScene {
+    var canHitMonster: Bool = true
+    
     var monsters: [Monster] = Array()
     var currentMonster = Monster()
     var currentMonsterIndex = 0
@@ -29,24 +31,25 @@ class GameScene: SKScene {
     }
     
     func handleDeath(_ monster: Monster){
+        self.canHitMonster = false
         // get rid of the current monster
-        monster.Node.run(monster.DeathAnimation)
-        playSound(sound: monster.DeathSound)
-        monster.Node.run(SKAction.fadeOut(withDuration: 0.5))
-        monster.Node.removeFromParent()
-        
-        // load the next monster
-        currentMonsterIndex += 1
-        if (currentMonsterIndex < currentLevel.Monsters.count){
-            // there are still monsters in the current level
-            loadMonster(
-                currentLevel.Monsters[currentMonsterIndex],
-                CGPoint( x: frame.width / 2, y: frame.height / 2)
-            )
-        } else {
-            // no more monsters in current level -> load the next level
-        }
-       
+        self.playSound(sound: monster.DeathSound)
+        monster.Node.run(monster.DeathAnimation, completion: {
+            monster.Node.removeFromParent()
+            
+            // load the next monster
+            self.currentMonsterIndex += 1
+            if (self.currentMonsterIndex < self.currentLevel.Monsters.count){
+                // there are still monsters in the current level
+                self.loadMonster(
+                    self.currentLevel.Monsters[self.currentMonsterIndex],
+                    CGPoint( x: self.frame.width / 2, y: self.frame.height / 2)
+                )
+            } else {
+                // no more monsters in current level -> load the next level
+            }
+            self.canHitMonster = true
+        })
     }
     
     func playSound(sound : SKAction)
@@ -197,6 +200,8 @@ class GameScene: SKScene {
     @objc func tap (recognizer: UIGestureRecognizer){
         let viewLocation = recognizer.location(in: view)
         let tapLocation = convertPoint(fromView: viewLocation)
-        handleHit(currentMonster, tapLocation)
+        if (canHitMonster){
+            handleHit(currentMonster, tapLocation)
+        }
     }
 }
