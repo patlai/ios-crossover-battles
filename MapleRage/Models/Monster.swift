@@ -27,6 +27,7 @@ class Monster{
     var Position: CGPoint{
         willSet{
             Node.position = newValue
+            // the origin of a CGRect is actually the top left corner
             HitBox.origin = CGPoint(x: newValue.x - Node.size.width / 2, y: newValue.y - Node.size.height / 2)
         }
     }

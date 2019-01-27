@@ -100,7 +100,23 @@ class GameScene: SKScene {
         let moveSequence = SKAction.sequence(moveByActions)
         let moveRepeatSequence = SKAction.repeat(moveSequence, count: 1)
         
-        label.run(moveRepeatSequence)
+        label.run(moveRepeatSequence, completion: {
+            label.removeFromParent()
+        })
+    }
+    
+    func showHitAnimation(_ position: CGPoint){
+        let hitNode = SKSpriteNode(imageNamed: "hit/hit0.png")
+        hitNode.position = position
+        let hitAnimation = Monster.getDefaultAnimation("hit/hit", ".png", 4, 0.1)
+            
+        self.addChild(hitNode)
+        hitNode.run(hitAnimation, completion: {
+            hitNode.removeFromParent()
+        })
+        
+        playSound(sound: currentMonster.DamageSound)
+        currentMonster.Node.run(currentMonster.DamageAnimation)
     }
     
     func handleHit(_ monster: Monster, _ tapPoint: CGPoint){
@@ -111,9 +127,6 @@ class GameScene: SKScene {
         damageLabel.position = tapPoint
         
         let hit = monster.HitBox.contains(tapPoint)
-        
-        print(hit)
-        print(monster.HitBox)
         
         if (hit){
             var damage = Double.random(in: minDamage ... maxDamage)
@@ -128,17 +141,14 @@ class GameScene: SKScene {
             let newSize = (2.0/3.0) * (damage / maxDamage) * maxLabelSize
             damageLabel.text = String(damage)
             damageLabel.fontSize = CGFloat(newSize)
-            
-            playSound(sound: currentMonster.DamageSound)
-            
-            currentMonster.Node.run(currentMonster.DamageAnimation)
+    
+            showHitAnimation(tapPoint)
         } else {
             damageLabel.text = "MISS"
         }
         
-        animateDamageLabel(damageLabel)
-        
         self.addChild(damageLabel)
+        animateDamageLabel(damageLabel)
     }
     
     @objc func tap (recognizer: UIGestureRecognizer){
