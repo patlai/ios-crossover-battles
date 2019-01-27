@@ -37,6 +37,28 @@ class GameScene: SKScene {
         run(sound)
     }
     
+    func loadLevel(_ level: Level, _ location: CGPoint){
+        let backgroundSound = SKAudioNode(fileNamed: level.BackgroundMusicPath)
+        self.addChild(backgroundSound)
+        
+        let backgroundImage = SKSpriteNode(imageNamed: level.BackgroundImagePath)
+        backgroundImage.position = CGPoint(x: frame.size.width / 2, y: frame.size.height / 2)
+        if (backgroundImage.size.height < frame.size.height){
+            backgroundImage.size.height = frame.size.height
+        }
+        else if (backgroundImage.size.width < frame.size.width){
+            backgroundImage.size.width = frame.size.width
+        }
+        backgroundImage.zPosition = -1
+        self.addChild(backgroundImage)
+        
+        let firstMonster = level.Monsters[0]
+        firstMonster.Position = location
+        currentMonster = firstMonster
+        self.addChild(currentMonster.Node)
+        currentMonster.Node.run(SKAction.repeatForever(currentMonster.DefaultAnimation))
+    }
+    
     // runs immediately after the scene is presented
     override func didMove(to view: SKView){
         
@@ -50,30 +72,14 @@ class GameScene: SKScene {
             y: 5 * view.frame.height / 6
         )
         
-        let mushmom = Monster(
-            1000000.0,
-            "mushroom/f0.png",
-            Monster.getDefaultAnimation("mushroom/f", ".png", 6, 0.15),
-            Monster.getSpecialAnimation("mushroom/f_hit.png", 0.3),
-            Monster.getSpecialAnimation("mushroom/f_hit.png", 0.3),
-            Monster.getSoundClip("sound/mushroom_damage.mp3"),
-            Monster.getSoundClip("sound/mushroom_death.mp3")
-        )
-        
-        mushmom.Position = center
-        monsters.append(mushmom)
-     
-        currentMonster = monsters[0]
-        self.addChild(currentMonster.Node)
-        currentMonster.Node.run(SKAction.repeatForever(currentMonster.DefaultAnimation))
-        
         monsterHPLabel.position = monsterHPLocation
         monsterHPLabel.fontName = "Avenir"
         monsterHPLabel.fontSize = 24
         addChild(monsterHPLabel)
         
-        let backgroundSound = SKAudioNode(fileNamed: "sound/hhg_theme.mp3")
-        self.addChild(backgroundSound)
+        if let level = Level.LoadLevelFromJSON("data/levels/L1"){
+           loadLevel(level, center)
+        }
         
         let recognizer = UITapGestureRecognizer(
             target: self,

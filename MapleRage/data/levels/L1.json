@@ -1,0 +1,18 @@
+{
+    "name": "Henesys",
+    "backgroundMusic": "sound/hhg_theme.mp3",
+    "backgroundImage": "images/henesys_background.jpg",
+    "monsters": [
+        {
+            "name": "Mushmom",
+            "hitpoints": 1000000,
+            "animationPrefix": "mushroom/f",
+            "animationSuffix": ".png",
+            "defaultAnimation": "mushroom/f0.png",
+            "hitAnimation": "mushroom/f_hit.png",
+            "damageSound": "sound/mushroom_damage.mp3",
+            "deathSound": "sound/mushroom_death.mp3",
+            "numberOfAnimationFrames": 6
+        }
+    ]
+}
