@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:MapleRage.xcodeproj">
+      location = "self:/Users/patricklai/Dropbox/programming/GitHub/MapleRage/CrossoverBattles.xcodeproj">
    </FileRef>
 </Workspace>

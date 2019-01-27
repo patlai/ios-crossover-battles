@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9427026721FD6E7F003F00BE /* sound in Resources */ = {isa = PBXBuildFile; fileRef = 9427026521FD6E7F003F00BE /* sound */; };
+		9427026821FD6E7F003F00BE /* mushroom in Resources */ = {isa = PBXBuildFile; fileRef = 9427026621FD6E7F003F00BE /* mushroom */; };
 		944E413821FD1A99005B9A48 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944E413721FD1A99005B9A48 /* AppDelegate.swift */; };
-		944E413A21FD1A99005B9A48 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 944E413921FD1A99005B9A48 /* GameScene.sks */; };
-		944E413C21FD1A99005B9A48 /* Actions.sks in Resources */ = {isa = PBXBuildFile; fileRef = 944E413B21FD1A99005B9A48 /* Actions.sks */; };
 		944E413E21FD1A99005B9A48 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944E413D21FD1A99005B9A48 /* GameScene.swift */; };
 		944E414021FD1A99005B9A48 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944E413F21FD1A99005B9A48 /* GameViewController.swift */; };
 		944E414321FD1A99005B9A48 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 944E414121FD1A99005B9A48 /* Main.storyboard */; };
@@ -18,10 +18,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		944E413421FD1A99005B9A48 /* MapleRage.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MapleRage.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9427026521FD6E7F003F00BE /* sound */ = {isa = PBXFileReference; lastKnownFileType = folder; path = sound; sourceTree = "<group>"; };
+		9427026621FD6E7F003F00BE /* mushroom */ = {isa = PBXFileReference; lastKnownFileType = folder; path = mushroom; sourceTree = "<group>"; };
+		944E413421FD1A99005B9A48 /* CrossoverBattles.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CrossoverBattles.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		944E413721FD1A99005B9A48 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		944E413921FD1A99005B9A48 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
-		944E413B21FD1A99005B9A48 /* Actions.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Actions.sks; sourceTree = "<group>"; };
 		944E413D21FD1A99005B9A48 /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
 		944E413F21FD1A99005B9A48 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 		944E414221FD1A99005B9A48 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -52,7 +52,7 @@
 		944E413521FD1A99005B9A48 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				944E413421FD1A99005B9A48 /* MapleRage.app */,
+				944E413421FD1A99005B9A48 /* CrossoverBattles.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -60,9 +60,9 @@
 		944E413621FD1A99005B9A48 /* MapleRage */ = {
 			isa = PBXGroup;
 			children = (
+				9427026621FD6E7F003F00BE /* mushroom */,
+				9427026521FD6E7F003F00BE /* sound */,
 				944E413721FD1A99005B9A48 /* AppDelegate.swift */,
-				944E413921FD1A99005B9A48 /* GameScene.sks */,
-				944E413B21FD1A99005B9A48 /* Actions.sks */,
 				944E413D21FD1A99005B9A48 /* GameScene.swift */,
 				944E413F21FD1A99005B9A48 /* GameViewController.swift */,
 				944E414121FD1A99005B9A48 /* Main.storyboard */,
@@ -76,9 +76,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		944E413321FD1A99005B9A48 /* MapleRage */ = {
+		944E413321FD1A99005B9A48 /* CrossoverBattles */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 944E414C21FD1A9A005B9A48 /* Build configuration list for PBXNativeTarget "MapleRage" */;
+			buildConfigurationList = 944E414C21FD1A9A005B9A48 /* Build configuration list for PBXNativeTarget "CrossoverBattles" */;
 			buildPhases = (
 				944E413021FD1A99005B9A48 /* Sources */,
 				944E413121FD1A99005B9A48 /* Frameworks */,
@@ -88,9 +88,9 @@
 			);
 			dependencies = (
 			);
-			name = MapleRage;
+			name = CrossoverBattles;
 			productName = MapleRage;
-			productReference = 944E413421FD1A99005B9A48 /* MapleRage.app */;
+			productReference = 944E413421FD1A99005B9A48 /* CrossoverBattles.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -108,7 +108,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 944E412F21FD1A99005B9A48 /* Build configuration list for PBXProject "MapleRage" */;
+			buildConfigurationList = 944E412F21FD1A99005B9A48 /* Build configuration list for PBXProject "CrossoverBattles" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -121,7 +121,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				944E413321FD1A99005B9A48 /* MapleRage */,
+				944E413321FD1A99005B9A48 /* CrossoverBattles */,
 			);
 		};
 /* End PBXProject section */
@@ -132,10 +132,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				944E414321FD1A99005B9A48 /* Main.storyboard in Resources */,
-				944E413A21FD1A99005B9A48 /* GameScene.sks in Resources */,
 				944E414521FD1A9A005B9A48 /* Assets.xcassets in Resources */,
+				9427026821FD6E7F003F00BE /* mushroom in Resources */,
+				9427026721FD6E7F003F00BE /* sound in Resources */,
 				944E414821FD1A9A005B9A48 /* LaunchScreen.storyboard in Resources */,
-				944E413C21FD1A99005B9A48 /* Actions.sks in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -295,12 +295,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = HN9Y7LP98L;
 				INFOPLIST_FILE = MapleRage/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = PP.MapleRage;
+				PRODUCT_BUNDLE_IDENTIFIER = PP.CrossoverBattles;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -312,12 +313,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = HN9Y7LP98L;
 				INFOPLIST_FILE = MapleRage/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = PP.MapleRage;
+				PRODUCT_BUNDLE_IDENTIFIER = PP.CrossoverBattles;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -327,7 +329,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		944E412F21FD1A99005B9A48 /* Build configuration list for PBXProject "MapleRage" */ = {
+		944E412F21FD1A99005B9A48 /* Build configuration list for PBXProject "CrossoverBattles" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				944E414A21FD1A9A005B9A48 /* Debug */,
@@ -336,7 +338,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		944E414C21FD1A9A005B9A48 /* Build configuration list for PBXNativeTarget "MapleRage" */ = {
+		944E414C21FD1A9A005B9A48 /* Build configuration list for PBXNativeTarget "CrossoverBattles" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				944E414D21FD1A9A005B9A48 /* Debug */,
