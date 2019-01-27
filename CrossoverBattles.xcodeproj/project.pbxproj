@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		9427026721FD6E7F003F00BE /* sound in Resources */ = {isa = PBXBuildFile; fileRef = 9427026521FD6E7F003F00BE /* sound */; };
 		9427026821FD6E7F003F00BE /* mushroom in Resources */ = {isa = PBXBuildFile; fileRef = 9427026621FD6E7F003F00BE /* mushroom */; };
+		9427026B21FD7519003F00BE /* Monster.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9427026A21FD7519003F00BE /* Monster.swift */; };
 		944E413821FD1A99005B9A48 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944E413721FD1A99005B9A48 /* AppDelegate.swift */; };
 		944E413E21FD1A99005B9A48 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944E413D21FD1A99005B9A48 /* GameScene.swift */; };
 		944E414021FD1A99005B9A48 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 944E413F21FD1A99005B9A48 /* GameViewController.swift */; };
@@ -20,6 +21,7 @@
 /* Begin PBXFileReference section */
 		9427026521FD6E7F003F00BE /* sound */ = {isa = PBXFileReference; lastKnownFileType = folder; path = sound; sourceTree = "<group>"; };
 		9427026621FD6E7F003F00BE /* mushroom */ = {isa = PBXFileReference; lastKnownFileType = folder; path = mushroom; sourceTree = "<group>"; };
+		9427026A21FD7519003F00BE /* Monster.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Monster.swift; sourceTree = "<group>"; };
 		944E413421FD1A99005B9A48 /* CrossoverBattles.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CrossoverBattles.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		944E413721FD1A99005B9A48 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		944E413D21FD1A99005B9A48 /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
@@ -41,6 +43,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		9427026921FD74F1003F00BE /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				9427026A21FD7519003F00BE /* Monster.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		944E412B21FD1A99005B9A48 = {
 			isa = PBXGroup;
 			children = (
@@ -60,6 +70,7 @@
 		944E413621FD1A99005B9A48 /* MapleRage */ = {
 			isa = PBXGroup;
 			children = (
+				9427026921FD74F1003F00BE /* Models */,
 				9427026621FD6E7F003F00BE /* mushroom */,
 				9427026521FD6E7F003F00BE /* sound */,
 				944E413721FD1A99005B9A48 /* AppDelegate.swift */,
@@ -146,6 +157,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9427026B21FD7519003F00BE /* Monster.swift in Sources */,
 				944E413E21FD1A99005B9A48 /* GameScene.swift in Sources */,
 				944E414021FD1A99005B9A48 /* GameViewController.swift in Sources */,
 				944E413821FD1A99005B9A48 /* AppDelegate.swift in Sources */,
