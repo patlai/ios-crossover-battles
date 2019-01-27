@@ -66,6 +66,8 @@ public class Level{
             let numberOfAnimationFrames = monster["numberOfAnimationFrames"] as? Int ?? 0
             let numberOfDeathAnimationFrames = monster["numberOfDeathAnimationFrames"] as? Int ?? 0
             let moveSpeed = monster["moveSpeed"] as? Int ?? 0
+            let defense = monster["defense"] as? Int ?? 0
+            let exp = monster["exp"] as? Int ?? 0
             
             let currentMonster = Monster(
                 name,
@@ -76,7 +78,9 @@ public class Level{
                 Monster.getDefaultAnimation(deathAnimationPrefix, deathAnimationSuffix, numberOfDeathAnimationFrames, 0.2),
                 Monster.getSoundClip(damageSound),
                 Monster.getSoundClip(deathSound),
-                moveSpeed
+                moveSpeed,
+                defense,
+                exp
             )
             
             levelMonsters.append(currentMonster)

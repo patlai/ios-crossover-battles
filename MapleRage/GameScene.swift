@@ -1,6 +1,8 @@
 import SpriteKit
 
 class GameScene: SKScene {
+    let player = Player.Shared
+    
     var canHitMonster: Bool = true
     
     var monsters: [Monster] = Array()
@@ -23,6 +25,7 @@ class GameScene: SKScene {
     let spriteFrameCount = 6
     let defaultFontSize = 45.0
     let labelFontSize = 25.0
+    let uiFontSize = 16.0
     
     var damageSound = SKAction.playSoundFileNamed("sound/mushroom_damage.mp3", waitForCompletion: false)
     
@@ -30,31 +33,57 @@ class GameScene: SKScene {
         label.text = String(monster.CurrentHP) + " / " + String(monster.MaxHP)
     }
     
-    func handleDeath(_ monster: Monster){
-        self.canHitMonster = false
-        // get rid of the current monster
-        self.playSound(sound: monster.DeathSound)
-        monster.Node.run(monster.DeathAnimation, completion: {
-            monster.Node.removeFromParent()
-            
-            // load the next monster
-            self.currentMonsterIndex += 1
-            if (self.currentMonsterIndex < self.currentLevel.Monsters.count){
-                // there are still monsters in the current level
-                self.loadMonster(
-                    self.currentLevel.Monsters[self.currentMonsterIndex],
-                    CGPoint( x: self.frame.width / 2, y: self.frame.height / 2)
-                )
-            } else {
-                // no more monsters in current level -> load the next level
-            }
-            self.canHitMonster = true
-        })
-    }
-    
     func playSound(sound : SKAction)
     {
         run(sound)
+    }
+    
+    func loadUi(_ view: SKView){
+        let monsterHPLocation = CGPoint(
+            x: view.frame.width / 2,
+            y: 5.25 * view.frame.height / 6
+        )
+        
+        let uiBackgroundWidth = self.frame.width
+        let uiBackgroundHeight = self.frame.height / 6
+        let margin = 4
+        
+        let uiBackground = SKShapeNode(rectOf: CGSize(width: uiBackgroundWidth, height: uiBackgroundHeight))
+        uiBackground.fillColor = SKColor.gray
+        uiBackground.position = CGPoint(x: self.frame.width / 2, y: self.frame.height / 12)
+        uiBackground.zPosition = -10
+        
+        self.addChild(monsterNameLabel)
+        
+        monsterHPLabel.position = monsterHPLocation
+        monsterHPLabel.fontName = "Avenir"
+        monsterHPLabel.fontSize = 24
+        self.addChild(monsterHPLabel)
+        
+        let playerLevelLabel = SKLabelNode(text: "LV: " + String(player.Level))
+        playerLevelLabel.fontName = "Avenir-Medium"
+        playerLevelLabel.fontSize = CGFloat(uiFontSize)
+        playerLevelLabel.fontColor = SKColor.yellow
+        playerLevelLabel.horizontalAlignmentMode = .left
+        //playerLevelLabel.verticalAlignmentMode = .top
+       
+        playerLevelLabel.position = CGPoint(
+            x: -uiBackgroundWidth / 2 + 10,
+            y: uiBackgroundHeight / 4
+        )
+        uiBackground.addChild(playerLevelLabel)
+        
+        let playerAttackLabel = SKLabelNode(text: "Attack: " + String(player.Attack))
+        playerAttackLabel.fontName = defaultFontName
+        playerAttackLabel.fontSize = CGFloat(uiFontSize)
+        playerAttackLabel.horizontalAlignmentMode = .left
+        playerAttackLabel.position = CGPoint(
+            x: playerLevelLabel.position.x,
+            y: playerLevelLabel.position.y - playerLevelLabel.fontSize - CGFloat(margin)
+        )
+        uiBackground.addChild(playerAttackLabel)
+        
+        self.addChild(uiBackground)
     }
     
     func loadMonster(_ monster: Monster, _ location: CGPoint){
@@ -87,7 +116,7 @@ class GameScene: SKScene {
         else if (backgroundImage.size.width < frame.size.width){
             backgroundImage.size.width = frame.size.width
         }
-        backgroundImage.zPosition = -1
+        backgroundImage.zPosition = -1000
         self.addChild(backgroundImage)
         
         let firstMonster = level.Monsters[currentMonsterIndex]
@@ -104,17 +133,7 @@ class GameScene: SKScene {
             y: view.frame.height / 2
         )
         
-        let monsterHPLocation = CGPoint(
-            x: view.frame.width / 2,
-            y: 5 * view.frame.height / 6
-        )
-        
-        self.addChild(monsterNameLabel)
-        
-        monsterHPLabel.position = monsterHPLocation
-        monsterHPLabel.fontName = "Avenir"
-        monsterHPLabel.fontSize = 24
-        self.addChild(monsterHPLabel)
+        loadUi(view)
         
         // load the first level from JSON data
         if let level = Level.LoadLevelFromJSON("data/levels/L1"){
@@ -165,9 +184,32 @@ class GameScene: SKScene {
         currentMonster.Node.run(currentMonster.DamageAnimation)
     }
     
+    func handleDeath(_ monster: Monster){
+        self.canHitMonster = false
+        // get rid of the current monster
+        self.playSound(sound: monster.DeathSound)
+        monster.Node.run(monster.DeathAnimation, completion: {
+            monster.Node.removeFromParent()
+            
+            // load the next monster
+            self.currentMonsterIndex += 1
+            self.monsterHPLabel.text = ""
+            if (self.currentMonsterIndex < self.currentLevel.Monsters.count){
+                // there are still monsters in the current level
+                self.loadMonster(
+                    self.currentLevel.Monsters[self.currentMonsterIndex],
+                    CGPoint( x: self.frame.width / 2, y: self.frame.height / 2)
+                )
+            } else {
+                // no more monsters in current level -> load the next level
+            }
+            self.canHitMonster = true
+        })
+    }
+    
     func handleHit(_ monster: Monster, _ tapPoint: CGPoint){
         let damageLabel = SKLabelNode()
-        damageLabel.fontName = "Avenir"
+        damageLabel.fontName = "Avenir-Medium"
         damageLabel.fontSize = CGFloat(defaultFontSize)
         damageLabel.fontColor = SKColor.yellow
         damageLabel.position = tapPoint
@@ -175,8 +217,10 @@ class GameScene: SKScene {
         let hit = monster.HitBox.contains(tapPoint)
         
         if (hit){
-            var damage = Double.random(in: minDamage ... maxDamage)
-            damage.round()
+            let attackResult = player.attackMonster(monster)
+            let damage = attackResult.0
+            let isCriticalHit = attackResult.1
+            
             currentMonster.CurrentHP = max(0, currentMonster.CurrentHP - damage)
             updateMonsterHPLabel(monsterHPLabel, currentMonster)
             
@@ -184,9 +228,12 @@ class GameScene: SKScene {
                 handleDeath(currentMonster)
             }
             
-            let newSize = (2.0/3.0) * (damage / maxDamage) * maxLabelSize
-            damageLabel.text = String(damage)
-            damageLabel.fontSize = CGFloat(newSize)
+            damageLabel.text = String(Int(damage))
+            if (isCriticalHit){
+                damageLabel.fontColor = SKColor.orange
+                damageLabel.fontName = "Avenir-Black"
+                damageLabel.fontSize *= 1.5
+            }
     
             showHitAnimation(tapPoint)
         } else {

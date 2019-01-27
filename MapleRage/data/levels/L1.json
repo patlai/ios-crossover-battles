@@ -5,7 +5,7 @@
     "monsters": [
         {
             "name": "Mushmom",
-            "hitpoints": 1000000,
+            "hitpoints": 5000,
             "animationPrefix": "mushroom/f",
             "animationSuffix": ".png",
             "deathAnimationPrefix": "mushroom/die",
@@ -16,11 +16,13 @@
             "deathSound": "sound/mushroom_death.mp3",
             "numberOfAnimationFrames": 6,
             "numberOfDeathAnimationFrames": 6,
-            "moveSpeed": 5
+            "moveSpeed": 5,
+            "defense": 30,
+            "exp": 100
         },
         {
             "name": "Stump",
-            "hitpoints": 500000,
+            "hitpoints": 3000,
             "animationPrefix": "sprites/stump/s",
             "animationSuffix": ".png",
             "deathAnimationPrefix": "sprites/stump/s_die",
@@ -31,7 +33,9 @@
             "deathSound": "sprites/stump/die.mp3",
             "numberOfAnimationFrames": 4,
             "numberOfDeathAnimationFrames": 4,
-            "moveSpeed": 3
+            "moveSpeed": 3,
+            "defense": 50,
+            "exp": 100
         }
     ]
 }

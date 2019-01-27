@@ -22,6 +22,8 @@ class Monster{
     var HitBox: CGRect
     var HasVerticalMovement: Bool
     var MoveSpeed: Int
+    var Defense: Int
+    var Exp: Int
     
     var Width: CGFloat
     var Height: CGFloat
@@ -50,6 +52,8 @@ class Monster{
         self.Height = 0
         self.HasVerticalMovement = false
         self.MoveSpeed = 0
+        self.Defense = 0
+        self.Exp = 0
     }
     
     init (
@@ -62,6 +66,8 @@ class Monster{
         _ DamageSound: SKAction,
         _ DeathSound: SKAction,
         _ moveSpeed: Int = 0,
+        _ defense: Int = 0,
+        _ exp: Int = 0,
         _ hasVerticalMovement: Bool = false)
     {
         self.Name = Name
@@ -75,6 +81,8 @@ class Monster{
         self.Node = SKSpriteNode(imageNamed: StartingFrame)
         self.MoveSpeed = moveSpeed
         self.HasVerticalMovement = hasVerticalMovement
+        self.Defense = defense
+        self.Exp = exp
         
         self.Width = self.Node.size.width
         self.Height = self.Node.size.height
