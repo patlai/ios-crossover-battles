@@ -3,11 +3,14 @@ import SpriteKit
 class GameScene: SKScene {
     var monsters: [Monster] = Array()
     var currentMonster = Monster()
+    var currentMonsterIndex = 0
+    var currentLevel = Level()
     
     //let monsterNode = SKSpriteNode(imageNamed: "mushroom/f0.png")
     let monsterNode = SKSpriteNode()
     var defaultMonsterAnimation = SKAction()
     
+    var monsterNameLabel = SKLabelNode()
     let monsterHPLabel = SKLabelNode()
     let defaultFontName = "Avenir"
     
@@ -30,8 +33,20 @@ class GameScene: SKScene {
         monster.Node.run(monster.DeathAnimation)
         playSound(sound: monster.DeathSound)
         monster.Node.run(SKAction.fadeOut(withDuration: 0.5))
+        monster.Node.removeFromParent()
         
         // load the next monster
+        currentMonsterIndex += 1
+        if (currentMonsterIndex < currentLevel.Monsters.count){
+            // there are still monsters in the current level
+            loadMonster(
+                currentLevel.Monsters[currentMonsterIndex],
+                CGPoint( x: frame.width / 2, y: frame.height / 2)
+            )
+        } else {
+            // no more monsters in current level -> load the next level
+        }
+       
     }
     
     func playSound(sound : SKAction)
@@ -40,11 +55,10 @@ class GameScene: SKScene {
     }
     
     func loadMonster(_ monster: Monster, _ location: CGPoint){
-        let monsterNameLabel = SKLabelNode(text: monster.Name)
+        monsterNameLabel.text = monster.Name
         monsterNameLabel.fontName = defaultFontName
         monsterNameLabel.fontSize = CGFloat(labelFontSize)
         monsterNameLabel.position = CGPoint(x: frame.width / 2, y: 11 * frame.height / 12)
-        self.addChild(monsterNameLabel)
         
         monster.Position = location
         self.addChild(monster.Node)
@@ -73,8 +87,10 @@ class GameScene: SKScene {
         backgroundImage.zPosition = -1
         self.addChild(backgroundImage)
         
-        let firstMonster = level.Monsters[0]
+        let firstMonster = level.Monsters[currentMonsterIndex]
         loadMonster(firstMonster, location)
+        
+        currentLevel = level
     }
     
     // runs immediately after the scene is presented
@@ -90,10 +106,12 @@ class GameScene: SKScene {
             y: 5 * view.frame.height / 6
         )
         
+        self.addChild(monsterNameLabel)
+        
         monsterHPLabel.position = monsterHPLocation
         monsterHPLabel.fontName = "Avenir"
         monsterHPLabel.fontSize = 24
-        addChild(monsterHPLabel)
+        self.addChild(monsterHPLabel)
         
         // load the first level from JSON data
         if let level = Level.LoadLevelFromJSON("data/levels/L1"){

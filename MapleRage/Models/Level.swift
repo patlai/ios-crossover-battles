@@ -14,6 +14,13 @@ public class Level{
     var BackgroundImagePath: String
     var Monsters: [Monster]
     
+    init(){
+        self.Name = ""
+        self.BackgroundMusicPath = ""
+        self.BackgroundImagePath = ""
+        self.Monsters = []
+    }
+    
     init(_ name: String, _ backgroundMusicPath: String, _ backgroundImagePath: String, _ monsters: [Monster]){
         self.Name = name
         self.BackgroundMusicPath = backgroundMusicPath

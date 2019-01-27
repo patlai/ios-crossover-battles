@@ -13,6 +13,17 @@
             "damageSound": "sound/mushroom_damage.mp3",
             "deathSound": "sound/mushroom_death.mp3",
             "numberOfAnimationFrames": 6
+        },
+        {
+            "name": "Super Mushmom",
+            "hitpoints": 2000000,
+            "animationPrefix": "mushroom/f",
+            "animationSuffix": ".png",
+            "defaultAnimation": "mushroom/f0.png",
+            "hitAnimation": "mushroom/f_hit.png",
+            "damageSound": "sound/mushroom_damage.mp3",
+            "deathSound": "sound/mushroom_death.mp3",
+            "numberOfAnimationFrames": 6
         }
     ]
 }
