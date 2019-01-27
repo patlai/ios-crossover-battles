@@ -9,6 +9,7 @@ class GameScene: SKScene {
     var defaultMonsterAnimation = SKAction()
     
     let monsterHPLabel = SKLabelNode()
+    let defaultFontName = "Avenir"
     
     let label = SKLabelNode(text: "Tap the screen to start")
     let maxLabelSize = 90.0
@@ -16,6 +17,7 @@ class GameScene: SKScene {
     let minDamage = 10000.0
     let spriteFrameCount = 6
     let defaultFontSize = 45.0
+    let labelFontSize = 25.0
     
     var damageSound = SKAction.playSoundFileNamed("sound/mushroom_damage.mp3", waitForCompletion: false)
     
@@ -37,7 +39,26 @@ class GameScene: SKScene {
         run(sound)
     }
     
+    func loadMonster(_ monster: Monster, _ location: CGPoint){
+        let monsterNameLabel = SKLabelNode(text: monster.Name)
+        monsterNameLabel.fontName = defaultFontName
+        monsterNameLabel.fontSize = CGFloat(labelFontSize)
+        monsterNameLabel.position = CGPoint(x: frame.width / 2, y: 11 * frame.height / 12)
+        self.addChild(monsterNameLabel)
+        
+        monster.Position = location
+        self.addChild(monster.Node)
+        monster.Node.run(SKAction.repeatForever(monster.DefaultAnimation))
+        currentMonster = monster
+    }
+    
     func loadLevel(_ level: Level, _ location: CGPoint){
+        let levelNameLabel = SKLabelNode(text: level.Name)
+        levelNameLabel.fontName = defaultFontName
+        levelNameLabel.fontSize = CGFloat(labelFontSize)
+        levelNameLabel.position = CGPoint(x: frame.width / 2, y: frame.height / 6)
+        self.addChild(levelNameLabel)
+        
         let backgroundSound = SKAudioNode(fileNamed: level.BackgroundMusicPath)
         self.addChild(backgroundSound)
         
@@ -53,10 +74,7 @@ class GameScene: SKScene {
         self.addChild(backgroundImage)
         
         let firstMonster = level.Monsters[0]
-        firstMonster.Position = location
-        currentMonster = firstMonster
-        self.addChild(currentMonster.Node)
-        currentMonster.Node.run(SKAction.repeatForever(currentMonster.DefaultAnimation))
+        loadMonster(firstMonster, location)
     }
     
     // runs immediately after the scene is presented
@@ -77,6 +95,7 @@ class GameScene: SKScene {
         monsterHPLabel.fontSize = 24
         addChild(monsterHPLabel)
         
+        // load the first level from JSON data
         if let level = Level.LoadLevelFromJSON("data/levels/L1"){
            loadLevel(level, center)
         }

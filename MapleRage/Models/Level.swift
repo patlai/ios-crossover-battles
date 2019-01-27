@@ -46,7 +46,7 @@ public class Level{
         var levelMonsters: Array<Monster> = Array()
         
         for monster in data{
-            let name = monster["name"]
+            let name = monster["name"] as? String ?? ""
             let hp = Double(monster["hitpoints"] as? Int ?? 0)
             let animationPrefix = monster["animationPrefix"] as? String ?? ""
             let animationSuffix = monster["animationSuffix"] as? String ?? ""
@@ -57,6 +57,7 @@ public class Level{
             let numberOfAnimationFrames = monster["numberOfAnimationFrames"] as? Int ?? 0
             
             let currentMonster = Monster(
+                name,
                 hp,
                 startingFrame,
                 Monster.getDefaultAnimation(animationPrefix, animationSuffix, numberOfAnimationFrames, 0.2),

@@ -10,6 +10,7 @@ import Foundation
 import SpriteKit
 
 class Monster{
+    var Name: String
     var MaxHP: Double
     var CurrentHP: Double
     var Node: SKSpriteNode
@@ -33,6 +34,7 @@ class Monster{
     }
     
     init(){
+        self.Name = ""
         self.MaxHP = 0
         self.CurrentHP = 0
         self.DefaultAnimation = SKAction()
@@ -49,6 +51,7 @@ class Monster{
     }
     
     init (
+        _ Name: String,
         _ MaxHP: Double,
         _ StartingFrame: String,
         _ DefaultAnimation: SKAction,
@@ -58,6 +61,7 @@ class Monster{
         _ DeathSound: SKAction,
         _ hasVerticalMovement: Bool = false)
     {
+        self.Name = Name
         self.MaxHP = MaxHP
         self.CurrentHP = MaxHP
         self.DefaultAnimation = DefaultAnimation
