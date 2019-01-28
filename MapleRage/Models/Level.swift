@@ -40,6 +40,8 @@ public class Level{
             let bgi = levelData["backgroundImage"] as? String ?? ""
             let killsRequired = levelData["killsRequired"] as? Int ?? 10
             
+            print(killsRequired)
+            
             let monsterData = levelData["monsters"]
             if let monsters = monsterData as? [Dictionary<String, AnyObject>] {
                 let monsterObjects = ParseMonsterData(monsters)

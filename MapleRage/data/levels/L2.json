@@ -1,8 +1,8 @@
 {
-    "name": "Henesys",
-    "backgroundMusic": "sound/hhg_theme.mp3",
-    "backgroundImage": "images/henesys_background.jpg",
-    "killsRequired": 2,
+    "name": "Sleepywood",
+    "backgroundMusic": "sound/sleepywood_theme.mp3",
+    "backgroundImage": "images/sleepywood_background.png",
+    "killsRequired": 15,
     "monsters": [
         {
             "name": "Mushmom",

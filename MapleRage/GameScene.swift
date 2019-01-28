@@ -1,4 +1,5 @@
 import SpriteKit
+import AVFoundation
 
 class GameScene: SKScene {
     let player = Player.Shared
@@ -18,6 +19,13 @@ class GameScene: SKScene {
     let monsterHPLabel = SKLabelNode()
     let defaultFontName = "Avenir"
     
+    var specialAttackButton = SKShapeNode()
+    
+    var backgroundMusicPlayer = AVAudioPlayer()
+    var backgroundSound = SKAudioNode()
+    var isBgmLoaded = false
+    
+    var levelNameLabel = SKLabelNode()
     var playerLevelLabel = SKLabelNode()
     var playerAttackLabel = SKLabelNode()
     var playerExpLabel = SKLabelNode()
@@ -42,6 +50,27 @@ class GameScene: SKScene {
     func playSound(sound : SKAction)
     {
         run(sound)
+    }
+    
+    func playBackgroundMusic(_ filename: String) {
+        let url = Bundle.main.url(forResource: filename, withExtension: nil)
+        guard let newURL = url else {
+            print("Could not find file: \(filename)")
+            return
+        }
+        do {
+            if (isBgmLoaded){
+                backgroundMusicPlayer.setVolume(0, fadeDuration: 2)
+            }
+            backgroundMusicPlayer = try AVAudioPlayer(contentsOf: newURL)
+            backgroundMusicPlayer.numberOfLoops = -1
+            backgroundMusicPlayer.prepareToPlay()
+            backgroundMusicPlayer.play()
+            backgroundMusicPlayer.setVolume(1, fadeDuration: 1)
+            isBgmLoaded = true
+        } catch let error as NSError {
+            print(error.description)
+        }
     }
     
     func loadUi(_ view: SKView){
@@ -124,6 +153,11 @@ class GameScene: SKScene {
         uiBackground.addChild(killCountLabel)
         
         self.addChild(uiBackground)
+        
+        specialAttackButton = SKShapeNode(rectOf: CGSize(width: 32, height: 32), cornerRadius: CGFloat(1.0))
+        specialAttackButton.fillColor = SKColor.red
+        specialAttackButton.position = CGPoint(x: self.frame.width - 32, y: 2 * self.frame.height / 3)
+        self.addChild(specialAttackButton)
     }
     
     func loadMonster(_ monster: Monster, _ location: CGPoint){
@@ -140,14 +174,24 @@ class GameScene: SKScene {
     }
     
     func loadLevel(_ level: Level, _ location: CGPoint){
-        let levelNameLabel = SKLabelNode(text: level.Name)
+        levelNameLabel.text = level.Name
         levelNameLabel.fontName = defaultFontName
         levelNameLabel.fontSize = CGFloat(labelFontSize)
         levelNameLabel.position = CGPoint(x: frame.width / 2, y: frame.height / 6)
-        self.addChild(levelNameLabel)
+        if (!self.children.contains(levelNameLabel)){
+             self.addChild(levelNameLabel)
+        }
         
-        let backgroundSound = SKAudioNode(fileNamed: level.BackgroundMusicPath)
-        self.addChild(backgroundSound)
+//        let audioNode = SKAudioNode(fileNamed: level.BackgroundMusicPath)
+//
+//        if (self.children.contains(backgroundSound)){
+//            backgroundSound.removeFromParent()
+//            backgroundSound = audioNode
+//        } else {
+//            backgroundSound = SKAudioNode(fileNamed: level.BackgroundMusicPath)
+//        }
+//        self.addChild(backgroundSound)
+        playBackgroundMusic(level.BackgroundMusicPath)
         
         let backgroundImage = SKSpriteNode(imageNamed: level.BackgroundImagePath)
         backgroundImage.position = CGPoint(x: frame.size.width / 2, y: frame.size.height / 2)
@@ -160,7 +204,7 @@ class GameScene: SKScene {
         backgroundImage.zPosition = -1000
         self.addChild(backgroundImage)
         
-        let firstMonster = level.Monsters[currentMonsterIndex]
+        let firstMonster = level.Monsters[0]
         loadMonster(firstMonster, location)
         
         currentLevel = level
@@ -274,7 +318,7 @@ class GameScene: SKScene {
             // load the next monster
             self.currentMonsterIndex = Int.random(in: 0 ..< self.currentLevel.Monsters.count)
             self.monsterHPLabel.text = ""
-            if (self.currentMonsterIndex < self.currentLevel.Monsters.count){
+            if (self.player.NumberOfKills < self.currentLevel.KillsRequired){
                 // there are still monsters in the current level
                 self.loadMonster(
                     self.currentLevel.Monsters[self.currentMonsterIndex],
@@ -282,6 +326,13 @@ class GameScene: SKScene {
                 )
             } else {
                 // no more monsters in current level -> load the next level
+                if let level = Level.LoadLevelFromJSON("data/levels/L2"){
+                    let center = CGPoint(
+                        x: self.frame.width / 2,
+                        y: self.frame.height / 2
+                    )
+                    self.loadLevel(level, center)
+                }
             }
             self.canHitMonster = true
         })
@@ -326,11 +377,45 @@ class GameScene: SKScene {
         animateDamageLabel(damageLabel)
     }
     
+    func handleSpecialAttack(_ monster: Monster, _ tapPoint: CGPoint){
+        let overlay = SKShapeNode(rectOf: CGSize(width: self.frame.width, height: self.frame.height), cornerRadius: 0)
+        overlay.position = CGPoint(x: self.frame.width / 2, y: self.frame.height / 2)
+        overlay.fillColor = SKColor.black
+        overlay.strokeColor = SKColor.black
+        overlay.alpha = 0.0
+        overlay.zPosition = 1000
+        self.addChild(overlay)
+        
+        let fadeinAction = SKAction.fadeAlpha(to: CGFloat(0.5), duration: 0.5)
+        let fadeoutAction = SKAction.fadeOut(withDuration: 0.5)
+        
+        overlay.run(fadeinAction)
+        
+        let genesisAngelAnimation = Monster.getDefaultAnimation("sprites/genesis/angel/a_", ".png", 20, 0.15)
+        let genesisAngelNode = SKSpriteNode(imageNamed: "sprites/genesis/angel/a_0.png")
+        genesisAngelNode.position = CGPoint(x: self.frame.width / 2, y: 2 * self.frame.height / 5)
+        self.addChild(genesisAngelNode)
+        genesisAngelNode.run(genesisAngelAnimation, completion: {
+            genesisAngelNode.removeFromParent()
+        })
+        
+        run(SKAction.playSoundFileNamed("sound/omae_wa.mp3", waitForCompletion: true), completion: {
+            overlay.run(fadeoutAction, completion: {
+                overlay.removeFromParent()
+            })
+        })
+    }
+    
     @objc func tap (recognizer: UIGestureRecognizer){
         let viewLocation = recognizer.location(in: view)
         let tapLocation = convertPoint(fromView: viewLocation)
         if (canHitMonster){
-            handleHit(currentMonster, tapLocation)
+            if(specialAttackButton.frame.contains(tapLocation)){
+               handleSpecialAttack(currentMonster, tapLocation)
+            } else {
+               handleHit(currentMonster, tapLocation)
+            }
+            
         }
     }
 }
