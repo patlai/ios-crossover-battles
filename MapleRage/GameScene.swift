@@ -18,6 +18,11 @@ class GameScene: SKScene {
     let monsterHPLabel = SKLabelNode()
     let defaultFontName = "Avenir"
     
+    var playerLevelLabel = SKLabelNode()
+    var playerAttackLabel = SKLabelNode()
+    var playerExpLabel = SKLabelNode()
+    var playerExpBar = SKShapeNode()
+    
     let label = SKLabelNode(text: "Tap the screen to start")
     let maxLabelSize = 90.0
     let maxDamage = 99999.0
@@ -47,6 +52,7 @@ class GameScene: SKScene {
         let uiBackgroundWidth = self.frame.width
         let uiBackgroundHeight = self.frame.height / 6
         let margin = 4
+        let horizontalOffset = 10
         
         let uiBackground = SKShapeNode(rectOf: CGSize(width: uiBackgroundWidth, height: uiBackgroundHeight))
         uiBackground.fillColor = SKColor.gray
@@ -60,7 +66,7 @@ class GameScene: SKScene {
         monsterHPLabel.fontSize = 24
         self.addChild(monsterHPLabel)
         
-        let playerLevelLabel = SKLabelNode(text: "LV: " + String(player.Level))
+        playerLevelLabel = SKLabelNode(text: "LV: " + String(player.Level))
         playerLevelLabel.fontName = "Avenir-Medium"
         playerLevelLabel.fontSize = CGFloat(uiFontSize)
         playerLevelLabel.fontColor = SKColor.yellow
@@ -68,12 +74,12 @@ class GameScene: SKScene {
         //playerLevelLabel.verticalAlignmentMode = .top
        
         playerLevelLabel.position = CGPoint(
-            x: -uiBackgroundWidth / 2 + 10,
+            x: -uiBackgroundWidth / 2 + CGFloat(horizontalOffset),
             y: uiBackgroundHeight / 4
         )
         uiBackground.addChild(playerLevelLabel)
         
-        let playerAttackLabel = SKLabelNode(text: "Attack: " + String(player.Attack))
+        playerAttackLabel = SKLabelNode(text: "Attack: " + String(player.Attack))
         playerAttackLabel.fontName = defaultFontName
         playerAttackLabel.fontSize = CGFloat(uiFontSize)
         playerAttackLabel.horizontalAlignmentMode = .left
@@ -82,6 +88,28 @@ class GameScene: SKScene {
             y: playerLevelLabel.position.y - playerLevelLabel.fontSize - CGFloat(margin)
         )
         uiBackground.addChild(playerAttackLabel)
+        
+        playerExpBar = SKShapeNode(rectOf: CGSize(
+            width: uiBackgroundWidth,
+            height: 20))
+        playerExpBar.fillColor = SKColor.yellow
+        playerExpBar.position = CGPoint(
+            x: 0,//playerLevelLabel.position.x + 50,
+            y: -10
+        )
+        playerExpBar.zPosition = 1
+        uiBackground.addChild(playerExpBar)
+        
+        playerExpLabel.fontSize = CGFloat(uiFontSize)
+        playerExpLabel.fontColor = SKColor.white
+        playerExpLabel.position = CGPoint(
+            x: 0,
+            y: -10
+        )
+        playerExpLabel.zPosition = 20
+        uiBackground.addChild(playerExpLabel)
+        
+        updateExpLabel()
         
         self.addChild(uiBackground)
     }
@@ -184,7 +212,24 @@ class GameScene: SKScene {
         currentMonster.Node.run(currentMonster.DamageAnimation)
     }
     
+    func updateExpLabel(){
+        let scale = (CGFloat(player.CurrentExp) / CGFloat(player.ExpToNextLevel))
+        playerExpLabel.text = String(player.CurrentExp) + " / " + String(player.ExpToNextLevel)
+        playerExpBar.xScale = scale
+        playerExpBar.position = CGPoint(
+            x: -self.frame.width / 2 + (scale * self.frame.width / 2) + 10,
+            y: 0
+        )
+    }
+    
+    func giveExp (_ amount: Int){
+        player.CurrentExp += amount
+        updateExpLabel()
+    }
+    
     func handleDeath(_ monster: Monster){
+        giveExp(monster.Exp)
+        
         self.canHitMonster = false
         // get rid of the current monster
         self.playSound(sound: monster.DeathSound)
