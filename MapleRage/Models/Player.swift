@@ -19,6 +19,7 @@ public class Player{
     var CritChance: Double
     var CurrentExp: Int
     var ExpToNextLevel: Int
+    var NumberOfKills: Int = 0
     
     init(){
         self.Level = 1
@@ -34,7 +35,7 @@ public class Player{
         self.Level += 1
         self.HP += 30.0
         self.MP += 30.0
-        self.Attack += 5.0
+        self.Attack += 10.0
         self.CritChance += 0.01
         self.CurrentExp = 0
         self.ExpToNextLevel += Int(10.0 * pow(Double(self.Level), 3.0))

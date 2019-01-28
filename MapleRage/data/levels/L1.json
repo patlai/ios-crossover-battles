@@ -2,6 +2,7 @@
     "name": "Henesys",
     "backgroundMusic": "sound/hhg_theme.mp3",
     "backgroundImage": "images/henesys_background.jpg",
+    "killsRequired": 15,
     "monsters": [
         {
             "name": "Mushmom",
@@ -18,11 +19,11 @@
             "numberOfDeathAnimationFrames": 6,
             "moveSpeed": 5,
             "defense": 30,
-            "exp": 100
+            "exp": 150
         },
         {
             "name": "Stump",
-            "hitpoints": 3000,
+            "hitpoints": 2750,
             "animationPrefix": "sprites/stump/s",
             "animationSuffix": ".png",
             "deathAnimationPrefix": "sprites/stump/s_die",
@@ -32,10 +33,78 @@
             "damageSound": "sprites/stump/damage.mp3",
             "deathSound": "sprites/stump/die.mp3",
             "numberOfAnimationFrames": 4,
-            "numberOfDeathAnimationFrames": 4,
+            "numberOfDeathAnimationFrames": 3,
             "moveSpeed": 3,
             "defense": 50,
             "exp": 100
+        },
+        {
+            "name": "Green Slime",
+            "hitpoints": 2500,
+            "animationPrefix": "sprites/green_slime/s",
+            "animationSuffix": ".png",
+            "deathAnimationPrefix": "sprites/green_slime/die",
+            "deathAnimationSuffix": ".png",
+            "defaultAnimation": "sprites/green_slime/s0.png",
+            "hitAnimation": "sprites/green_slime/hit0.png",
+            "damageSound": "sprites/green_slime/damage.mp3",
+            "deathSound": "sprites/green_slime/die.mp3",
+            "numberOfAnimationFrames": 7,
+            "numberOfDeathAnimationFrames": 4,
+            "moveSpeed": 3,
+            "defense": 30,
+            "exp": 80
+        },
+        {
+            "name": "Stone Golem",
+            "hitpoints": 4500,
+            "animationPrefix": "sprites/stone_golem/s",
+            "animationSuffix": ".png",
+            "deathAnimationPrefix": "sprites/stone_golem/die",
+            "deathAnimationSuffix": ".png",
+            "defaultAnimation": "sprites/stone_golem/s0.png",
+            "hitAnimation": "sprites/stone_golem/hit0.png",
+            "damageSound": "sprites/stone_golem/damage.mp3",
+            "deathSound": "sprites/stone_golem/die.mp3",
+            "numberOfAnimationFrames": 4,
+            "numberOfDeathAnimationFrames": 7,
+            "moveSpeed": 3,
+            "defense": 50,
+            "exp": 120
+        },
+        {
+            "name": "Red Snail",
+            "hitpoints": 1500,
+            "animationPrefix": "sprites/red_snail/s",
+            "animationSuffix": ".png",
+            "deathAnimationPrefix": "sprites/red_snail/die",
+            "deathAnimationSuffix": ".png",
+            "defaultAnimation": "sprites/red_snail/s0.png",
+            "hitAnimation": "sprites/red_snail/hit0.png",
+            "damageSound": "sprites/red_snail/damage.mp3",
+            "deathSound": "sprites/red_snail/die.mp3",
+            "numberOfAnimationFrames": 4,
+            "numberOfDeathAnimationFrames": 3,
+            "moveSpeed": 1,
+            "defense": 30,
+            "exp": 60
+        },
+        {
+            "name": "Ribbon Pig",
+            "hitpoints": 3000,
+            "animationPrefix": "sprites/ribbon_pig/s",
+            "animationSuffix": ".png",
+            "deathAnimationPrefix": "sprites/ribbon_pig/die",
+            "deathAnimationSuffix": ".png",
+            "defaultAnimation": "sprites/ribbon_pig/s0.png",
+            "hitAnimation": "sprites/ribbon_pig/hit0.png",
+            "damageSound": "sprites/ribbon_pig/damage.mp3",
+            "deathSound": "sprites/ribbon_pig/die.mp3",
+            "numberOfAnimationFrames": 3,
+            "numberOfDeathAnimationFrames": 3,
+            "moveSpeed": 4,
+            "defense": 50,
+            "exp": 85
         }
     ]
 }

@@ -11,6 +11,7 @@ DerivedData/
 *.gif
 *.jpg
 *.mp3
+*.psd
 
 ## Various settings
 *.pbxuser

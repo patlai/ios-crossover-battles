@@ -22,6 +22,7 @@ class GameScene: SKScene {
     var playerAttackLabel = SKLabelNode()
     var playerExpLabel = SKLabelNode()
     var playerExpBar = SKShapeNode()
+    var killCountLabel = SKLabelNode()
     
     let label = SKLabelNode(text: "Tap the screen to start")
     let maxLabelSize = 90.0
@@ -35,7 +36,7 @@ class GameScene: SKScene {
     var damageSound = SKAction.playSoundFileNamed("sound/mushroom_damage.mp3", waitForCompletion: false)
     
     func updateMonsterHPLabel(_ label: SKLabelNode, _ monster: Monster){
-        label.text = String(monster.CurrentHP) + " / " + String(monster.MaxHP)
+        label.text = String(Int(monster.CurrentHP)) + " / " + String(Int(monster.MaxHP))
     }
     
     func playSound(sound : SKAction)
@@ -79,7 +80,7 @@ class GameScene: SKScene {
         )
         uiBackground.addChild(playerLevelLabel)
         
-        playerAttackLabel = SKLabelNode(text: "Attack: " + String(player.Attack))
+        playerAttackLabel = SKLabelNode(text: "ATT: " + String(player.Attack))
         playerAttackLabel.fontName = defaultFontName
         playerAttackLabel.fontSize = CGFloat(uiFontSize)
         playerAttackLabel.horizontalAlignmentMode = .left
@@ -98,18 +99,29 @@ class GameScene: SKScene {
             y: -10
         )
         playerExpBar.zPosition = 1
-        uiBackground.addChild(playerExpBar)
         
         playerExpLabel.fontSize = CGFloat(uiFontSize)
-        playerExpLabel.fontColor = SKColor.white
+        playerExpLabel.fontName = defaultFontName
+        playerExpLabel.fontColor = SKColor.black
         playerExpLabel.position = CGPoint(
             x: 0,
             y: -10
         )
         playerExpLabel.zPosition = 20
         uiBackground.addChild(playerExpLabel)
+        uiBackground.addChild(playerExpBar)
         
         updateExpLabel()
+        
+        killCountLabel.text = "Kills: " + String(player.NumberOfKills)
+        killCountLabel.fontName = defaultFontName
+        killCountLabel.fontSize = CGFloat(uiFontSize)
+        killCountLabel.fontColor = SKColor.white
+        killCountLabel.position = CGPoint(
+            x: 0,
+            y: killCountLabel.fontSize * 2
+        )
+        uiBackground.addChild(killCountLabel)
         
         self.addChild(uiBackground)
     }
@@ -120,6 +132,7 @@ class GameScene: SKScene {
         monsterNameLabel.fontSize = CGFloat(labelFontSize)
         monsterNameLabel.position = CGPoint(x: frame.width / 2, y: 11 * frame.height / 12)
         
+        monster.CurrentHP = monster.MaxHP
         monster.Position = location
         self.addChild(monster.Node)
         monster.Node.run(SKAction.repeatForever(monster.DefaultAnimation))
@@ -155,6 +168,7 @@ class GameScene: SKScene {
     
     // runs immediately after the scene is presented
     override func didMove(to view: SKView){
+        view.ignoresSiblingOrder = false
         
         let center = CGPoint(
             x: view.frame.width / 2,
@@ -222,8 +236,29 @@ class GameScene: SKScene {
         )
     }
     
+    func handleLevelUp(){
+        player.levelUp()
+        playerLevelLabel.text = "LV: " + String(player.Level)
+        playerAttackLabel.text = "ATT: " + String(player.Attack)
+        
+        let levelUpAnimation = Monster.getDefaultAnimation("sprites/level_up/l", ".png", 21, 0.1)
+        let levelUpSound = Monster.getSoundClip("sprites/level_up/sound.mp3")
+        let levelUpAnimationNode = SKSpriteNode(imageNamed: "sprites/level_up/l0.png")
+        levelUpAnimationNode.position = CGPoint(x: self.frame.width / 2, y: self.frame.height / 4)
+        levelUpAnimationNode.zPosition = 20
+        
+        self.playSound(sound: levelUpSound)
+        self.addChild(levelUpAnimationNode)
+        levelUpAnimationNode.run(levelUpAnimation, completion: {
+            levelUpAnimationNode.removeFromParent()
+        })
+    }
+    
     func giveExp (_ amount: Int){
         player.CurrentExp += amount
+        if (player.CurrentExp >= player.ExpToNextLevel){
+            handleLevelUp()
+        }
         updateExpLabel()
     }
     
@@ -237,7 +272,7 @@ class GameScene: SKScene {
             monster.Node.removeFromParent()
             
             // load the next monster
-            self.currentMonsterIndex += 1
+            self.currentMonsterIndex = Int.random(in: 0 ..< self.currentLevel.Monsters.count)
             self.monsterHPLabel.text = ""
             if (self.currentMonsterIndex < self.currentLevel.Monsters.count){
                 // there are still monsters in the current level
@@ -250,6 +285,8 @@ class GameScene: SKScene {
             }
             self.canHitMonster = true
         })
+        player.NumberOfKills += 1
+        killCountLabel.text = "Kills: " + String(player.NumberOfKills)
     }
     
     func handleHit(_ monster: Monster, _ tapPoint: CGPoint){
