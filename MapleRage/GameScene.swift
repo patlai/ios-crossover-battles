@@ -127,7 +127,7 @@ class GameScene: SKScene {
             x: 0,//playerLevelLabel.position.x + 50,
             y: -10
         )
-        playerExpBar.zPosition = 1
+        playerExpBar.zPosition = 2
         
         playerExpLabel.fontSize = CGFloat(uiFontSize)
         playerExpLabel.fontName = defaultFontName
@@ -136,7 +136,7 @@ class GameScene: SKScene {
             x: 0,
             y: -10
         )
-        playerExpLabel.zPosition = 20
+        playerExpLabel.zPosition = 3
         uiBackground.addChild(playerExpLabel)
         uiBackground.addChild(playerExpBar)
         
@@ -340,6 +340,24 @@ class GameScene: SKScene {
         killCountLabel.text = "Kills: " + String(player.NumberOfKills)
     }
     
+    func dealDamageToMonster(_ monster: Monster, _ damage: Double, _ point: CGPoint, _ isCrit: Bool, _ label: SKLabelNode){
+        currentMonster.CurrentHP = max(0, currentMonster.CurrentHP - damage)
+        updateMonsterHPLabel(monsterHPLabel, currentMonster)
+        
+        label.text = String(Int(damage))
+        if (isCrit){
+            label.fontColor = SKColor.orange
+            label.fontName = "Avenir-Black"
+            label.fontSize *= 1.5
+        }
+        
+        if (currentMonster.CurrentHP <= 0){
+            handleDeath(currentMonster)
+        }
+        
+        showHitAnimation(point)
+    }
+    
     func handleHit(_ monster: Monster, _ tapPoint: CGPoint){
         let damageLabel = SKLabelNode()
         damageLabel.fontName = "Avenir-Medium"
@@ -354,21 +372,7 @@ class GameScene: SKScene {
             let damage = attackResult.0
             let isCriticalHit = attackResult.1
             
-            currentMonster.CurrentHP = max(0, currentMonster.CurrentHP - damage)
-            updateMonsterHPLabel(monsterHPLabel, currentMonster)
-            
-            if (currentMonster.CurrentHP <= 0){
-                handleDeath(currentMonster)
-            }
-            
-            damageLabel.text = String(Int(damage))
-            if (isCriticalHit){
-                damageLabel.fontColor = SKColor.orange
-                damageLabel.fontName = "Avenir-Black"
-                damageLabel.fontSize *= 1.5
-            }
-    
-            showHitAnimation(tapPoint)
+            dealDamageToMonster(monster, damage, tapPoint, isCriticalHit, damageLabel)
         } else {
             damageLabel.text = "MISS"
         }
@@ -383,7 +387,7 @@ class GameScene: SKScene {
         overlay.fillColor = SKColor.black
         overlay.strokeColor = SKColor.black
         overlay.alpha = 0.0
-        overlay.zPosition = 1000
+        overlay.zPosition = -1
         self.addChild(overlay)
         
         let fadeinAction = SKAction.fadeAlpha(to: CGFloat(0.5), duration: 0.5)
@@ -391,12 +395,40 @@ class GameScene: SKScene {
         
         overlay.run(fadeinAction)
         
-        let genesisAngelAnimation = Monster.getDefaultAnimation("sprites/genesis/angel/a_", ".png", 20, 0.15)
+        let genesisAngelAnimation = Monster.getDefaultAnimation("sprites/genesis/angel/a_", ".png", 20, 0.12)
         let genesisAngelNode = SKSpriteNode(imageNamed: "sprites/genesis/angel/a_0.png")
         genesisAngelNode.position = CGPoint(x: self.frame.width / 2, y: 2 * self.frame.height / 5)
         self.addChild(genesisAngelNode)
+        
+        let genesisSkyAnimation1 = Monster.getDefaultAnimation("sprites/genesis/sky/a_", ".png", 10, 0.15)
+        let genesisSkyNode1 = SKSpriteNode(imageNamed: "sprites/genesis/sky/a_0.png")
+        genesisSkyNode1.position = CGPoint(x: self.frame.width / 2, y: 3.3 * self.frame.height / 5)
+        self.addChild(genesisSkyNode1)
+        
+        let genesisSkyAnimation2 = Monster.getDefaultAnimation("sprites/genesis/sky/a_", ".png", 11, 0.15, 10)
+        let genesisSkyNode2 = SKSpriteNode(imageNamed: "sprites/genesis/sky/a_10.png")
+        genesisSkyNode2.position = CGPoint(x: self.frame.width / 2, y: 3.3 * self.frame.height / 5)
+        
+        let center = CGPoint(x: self.frame.width / 2, y: self.frame.height / 2)
+        
         genesisAngelNode.run(genesisAngelAnimation, completion: {
             genesisAngelNode.removeFromParent()
+            genesisSkyNode1.run(genesisSkyAnimation1, completion: {
+                genesisSkyNode1.removeFromParent()
+                
+                let damageLabel = SKLabelNode()
+                damageLabel.position = CGPoint(x: self.frame.width / 2, y: 1.1 * self.frame.height / 2)
+                damageLabel.fontSize = CGFloat(self.defaultFontSize)
+                damageLabel.zPosition = 10
+                self.addChild(damageLabel)
+                self.animateDamageLabel(damageLabel)
+                
+                self.addChild(genesisSkyNode2)
+                self.dealDamageToMonster(self.currentMonster, 9999999.0, center, true, damageLabel)
+                genesisSkyNode2.run(genesisSkyAnimation2, completion:{
+                    genesisSkyNode2.removeFromParent()
+                })
+            })
         })
         
         run(SKAction.playSoundFileNamed("sound/omae_wa.mp3", waitForCompletion: true), completion: {

@@ -91,10 +91,10 @@ class Monster{
         self.HitBox = CGRect(x: 0, y: 0, width: self.Width, height: self.Height)
     }
     
-    public static func getDefaultAnimation(_ prefix: String, _ suffix: String, _ numberOfFrames: Int, _ frameDuration: Double) -> SKAction{
+    public static func getDefaultAnimation(_ prefix: String, _ suffix: String, _ numberOfFrames: Int, _ frameDuration: Double, _ offset: Int = 0) -> SKAction{
         var frames: [SKTexture] = Array()
         for i in 0 ..< numberOfFrames {
-            let current = SKTexture.init(imageNamed: prefix + String(i) + suffix)
+            let current = SKTexture.init(imageNamed: prefix + String(i + offset) + suffix)
             frames.append(current)
         }
         
