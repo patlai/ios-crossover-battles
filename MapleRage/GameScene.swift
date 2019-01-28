@@ -395,7 +395,7 @@ class GameScene: SKScene {
         
         overlay.run(fadeinAction)
         
-        let genesisAngelAnimation = Monster.getDefaultAnimation("sprites/genesis/angel/a_", ".png", 20, 0.12)
+        let genesisAngelAnimation = Monster.getDefaultAnimation("sprites/genesis/angel/a_", ".png", 20, 0.15)
         let genesisAngelNode = SKSpriteNode(imageNamed: "sprites/genesis/angel/a_0.png")
         genesisAngelNode.position = CGPoint(x: self.frame.width / 2, y: 2 * self.frame.height / 5)
         self.addChild(genesisAngelNode)

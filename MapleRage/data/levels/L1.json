@@ -2,7 +2,7 @@
     "name": "Henesys",
     "backgroundMusic": "sound/hhg_theme.mp3",
     "backgroundImage": "images/henesys_background.jpg",
-    "killsRequired": 2,
+    "killsRequired": 15,
     "monsters": [
         {
             "name": "Mushmom",
