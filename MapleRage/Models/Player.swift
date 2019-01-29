@@ -20,6 +20,27 @@ public class Player{
     var CurrentExp: Int
     var ExpToNextLevel: Int
     var NumberOfKills: Int = 0
+    var ExpRate: Double = 1.0
+    var AttackMultiplier: Double = 1.0
+    var HasSuperAttack: Bool = false {
+        willSet{
+            if (newValue) {
+                AttackMultiplier *= 50.0
+            } else {
+                AttackMultiplier /= 50.0
+            }
+        }
+    }
+    
+    var HasSuperExp: Bool = false {
+        willSet{
+            if (newValue) {
+                ExpRate *= 100.0
+            } else {
+                ExpRate /= 100.0
+            }
+        }
+    }
     
     init(){
         self.Level = 1
@@ -46,8 +67,16 @@ public class Player{
         let criticalMultiplier = isCriticalHit ? 1.6 : 1.0
         let minDamage = 1.0 * self.Attack
         let maxDamage = 10.0 * self.Attack - Double(monster.Defense)
-        var damage = criticalMultiplier * Double.random(in: minDamage ... maxDamage)
+        var damage = self.AttackMultiplier * criticalMultiplier * Double.random(in: minDamage ... maxDamage)
         damage.round()
         return (damage, isCriticalHit)
+    }
+    
+    func ToggleSuperAttack(){
+        HasSuperAttack = !HasSuperAttack
+    }
+    
+    func ToggleSuperExp(){
+        HasSuperExp = !HasSuperExp
     }
 }

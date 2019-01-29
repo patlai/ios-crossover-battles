@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9401B46E21FFB17400DB90FD /* EffectsHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9401B46D21FFB17400DB90FD /* EffectsHelper.swift */; };
 		9427026721FD6E7F003F00BE /* sound in Resources */ = {isa = PBXBuildFile; fileRef = 9427026521FD6E7F003F00BE /* sound */; };
 		9427026821FD6E7F003F00BE /* mushroom in Resources */ = {isa = PBXBuildFile; fileRef = 9427026621FD6E7F003F00BE /* mushroom */; };
 		9427026B21FD7519003F00BE /* Monster.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9427026A21FD7519003F00BE /* Monster.swift */; };
@@ -26,6 +27,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9401B46D21FFB17400DB90FD /* EffectsHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EffectsHelper.swift; sourceTree = "<group>"; };
 		9427026521FD6E7F003F00BE /* sound */ = {isa = PBXFileReference; lastKnownFileType = folder; path = sound; sourceTree = "<group>"; };
 		9427026621FD6E7F003F00BE /* mushroom */ = {isa = PBXFileReference; lastKnownFileType = folder; path = mushroom; sourceTree = "<group>"; };
 		9427026A21FD7519003F00BE /* Monster.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Monster.swift; sourceTree = "<group>"; };
@@ -71,6 +73,7 @@
 			isa = PBXGroup;
 			children = (
 				9427026F21FE4407003F00BE /* JSONHelper.swift */,
+				9401B46D21FFB17400DB90FD /* EffectsHelper.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -196,6 +199,7 @@
 				944E414021FD1A99005B9A48 /* GameViewController.swift in Sources */,
 				9427027A21FE6950003F00BE /* Player.swift in Sources */,
 				944E413821FD1A99005B9A48 /* AppDelegate.swift in Sources */,
+				9401B46E21FFB17400DB90FD /* EffectsHelper.swift in Sources */,
 				9427027021FE4407003F00BE /* JSONHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

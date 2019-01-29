@@ -19,7 +19,10 @@ class GameScene: SKScene {
     let monsterHPLabel = SKLabelNode()
     let defaultFontName = "Avenir"
     
-    var specialAttackButton = SKShapeNode()
+    var specialAttackButton = SKSpriteNode()
+    var superDamageButton = SKSpriteNode()
+    var superExpButton = SKSpriteNode()
+    var levelUpButton = SKSpriteNode()
     
     var backgroundMusicPlayer = AVAudioPlayer()
     var backgroundSound = SKAudioNode()
@@ -40,9 +43,7 @@ class GameScene: SKScene {
     let defaultFontSize = 45.0
     let labelFontSize = 25.0
     let uiFontSize = 16.0
-    
-    var damageSound = SKAction.playSoundFileNamed("sound/mushroom_damage.mp3", waitForCompletion: false)
-    
+        
     func updateMonsterHPLabel(_ label: SKLabelNode, _ monster: Monster){
         label.text = String(Int(monster.CurrentHP)) + " / " + String(Int(monster.MaxHP))
     }
@@ -154,10 +155,23 @@ class GameScene: SKScene {
         
         self.addChild(uiBackground)
         
-        specialAttackButton = SKShapeNode(rectOf: CGSize(width: 32, height: 32), cornerRadius: CGFloat(1.0))
-        specialAttackButton.fillColor = SKColor.red
-        specialAttackButton.position = CGPoint(x: self.frame.width - 32, y: 2 * self.frame.height / 3)
+        let iconOffset = CGFloat(36.0)
+        
+        specialAttackButton = SKSpriteNode(imageNamed: "sprites/genesis/icon.png")
+        specialAttackButton.position = CGPoint(x: self.frame.width - 16, y: 2 * self.frame.height / 3)
         self.addChild(specialAttackButton)
+        
+        superDamageButton = SKSpriteNode(imageNamed: "sprites/super_damage/icon.png")
+        superDamageButton.position = CGPoint(x: self.frame.width - 16, y: 2 * self.frame.height / 3 - iconOffset)
+        self.addChild(superDamageButton)
+        
+        superExpButton = SKSpriteNode(imageNamed: "sprites/holy_symbol/icon.png")
+        superExpButton.position = CGPoint(x: self.frame.width - 16, y: 2 * self.frame.height / 3 - iconOffset * 2)
+        self.addChild(superExpButton)
+        
+        levelUpButton = SKSpriteNode(imageNamed: "sprites/maple_warrior/icon.png")
+        levelUpButton.position = CGPoint(x: self.frame.width - 16, y: 2 * self.frame.height / 3 - iconOffset * 3)
+        self.addChild(levelUpButton)
     }
     
     func loadMonster(_ monster: Monster, _ location: CGPoint){
@@ -233,7 +247,7 @@ class GameScene: SKScene {
         view.addGestureRecognizer(recognizer)
     }
     
-    func animateDamageLabel(_ label: SKLabelNode){
+    func getLabelPopupAnimation() -> SKAction {
         let moveByAction = SKAction.moveBy(
             x: 0,
             y: 100,
@@ -251,7 +265,11 @@ class GameScene: SKScene {
         let moveSequence = SKAction.sequence(moveByActions)
         let moveRepeatSequence = SKAction.repeat(moveSequence, count: 1)
         
-        label.run(moveRepeatSequence, completion: {
+        return moveRepeatSequence
+    }
+    
+    func animateDamageLabel(_ label: SKLabelNode){
+        label.run(getLabelPopupAnimation(), completion: {
             label.removeFromParent()
         })
     }
@@ -280,10 +298,14 @@ class GameScene: SKScene {
         )
     }
     
+    func updateAttackLabel(){
+        playerAttackLabel.text = "ATT: " + String(player.Attack) + (player.AttackMultiplier > 1.0 ? " (x" + String(player.AttackMultiplier) + ")" : "")
+    }
+    
     func handleLevelUp(){
         player.levelUp()
         playerLevelLabel.text = "LV: " + String(player.Level)
-        playerAttackLabel.text = "ATT: " + String(player.Attack)
+        updateAttackLabel()
         
         let levelUpAnimation = Monster.getDefaultAnimation("sprites/level_up/l", ".png", 21, 0.1)
         let levelUpSound = Monster.getSoundClip("sprites/level_up/sound.mp3")
@@ -298,16 +320,33 @@ class GameScene: SKScene {
         })
     }
     
+    func showPopupLabel (_ text: String){
+        let popUpLabel = SKLabelNode(text: text)
+        popUpLabel.fontSize = CGFloat(defaultFontSize)
+        popUpLabel.fontName = defaultFontName
+        popUpLabel.position = CGPoint(x: self.frame.width / 2, y: 1.75 * self.frame.height / 3)
+        self.addChild(popUpLabel)
+        popUpLabel.run(getLabelPopupAnimation(), completion: {
+            popUpLabel.removeFromParent()
+        })
+    }
+    
+    func showExpGainLabel (_ amount: Int){
+        showPopupLabel("+" + String(amount) + " EXP")
+    }
+    
     func giveExp (_ amount: Int){
         player.CurrentExp += amount
         if (player.CurrentExp >= player.ExpToNextLevel){
             handleLevelUp()
         }
+        showExpGainLabel(amount)
         updateExpLabel()
     }
     
     func handleDeath(_ monster: Monster){
-        giveExp(monster.Exp)
+        let amount = Int(Double(monster.Exp) * player.ExpRate)
+        giveExp(amount)
         
         self.canHitMonster = false
         // get rid of the current monster
@@ -381,6 +420,7 @@ class GameScene: SKScene {
         animateDamageLabel(damageLabel)
     }
     
+    
     func handleSpecialAttack(_ monster: Monster, _ tapPoint: CGPoint){
         let overlay = SKShapeNode(rectOf: CGSize(width: self.frame.width, height: self.frame.height), cornerRadius: 0)
         overlay.position = CGPoint(x: self.frame.width / 2, y: self.frame.height / 2)
@@ -438,16 +478,32 @@ class GameScene: SKScene {
         })
     }
     
+    func toggleSuperDamage(){
+        player.ToggleSuperAttack()
+        showPopupLabel("Super damage: " + (player.HasSuperAttack ? "ON" : "OFF"))
+        updateAttackLabel()
+    }
+    
+    func toggleSuperExp(){
+        player.ToggleSuperExp()
+        showPopupLabel("Super EXP: " + (player.HasSuperExp ? "ON" : "OFF"))
+    }
+    
     @objc func tap (recognizer: UIGestureRecognizer){
         let viewLocation = recognizer.location(in: view)
         let tapLocation = convertPoint(fromView: viewLocation)
         if (canHitMonster){
             if(specialAttackButton.frame.contains(tapLocation)){
-               handleSpecialAttack(currentMonster, tapLocation)
+                handleSpecialAttack(currentMonster, tapLocation)
+            } else if (superDamageButton.frame.contains(tapLocation)){
+                toggleSuperDamage()
+            } else if (superExpButton.frame.contains(tapLocation) ){
+                toggleSuperExp()
+            } else if (levelUpButton.frame.contains(tapLocation) ){
+                handleLevelUp()
             } else {
-               handleHit(currentMonster, tapLocation)
+                self.handleHit(currentMonster, tapLocation)
             }
-            
         }
     }
 }
