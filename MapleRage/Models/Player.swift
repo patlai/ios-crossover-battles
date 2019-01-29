@@ -22,6 +22,7 @@ public class Player{
     var NumberOfKills: Int = 0
     var ExpRate: Double = 1.0
     var AttackMultiplier: Double = 1.0
+    var CompletedLevels: Array<Bool>
     var HasSuperAttack: Bool = false {
         willSet{
             if (newValue) {
@@ -50,6 +51,7 @@ public class Player{
         self.CritChance = 0.5
         self.CurrentExp = 0
         self.ExpToNextLevel = 10
+        self.CompletedLevels = Array()
     }
     
     func levelUp(){

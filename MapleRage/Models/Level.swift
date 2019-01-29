@@ -14,6 +14,7 @@ public class Level{
     var Name: String
     var BackgroundMusicPath: String
     var BackgroundImagePath: String
+    var IconPath: String
     var KillsRequired: Int
     var Monsters: [Monster]
     var IsCompleted: Bool = false
@@ -22,14 +23,16 @@ public class Level{
         self.Name = ""
         self.BackgroundMusicPath = ""
         self.BackgroundImagePath = ""
+        self.IconPath = ""
         self.KillsRequired = 10
         self.Monsters = []
     }
     
-    init(_ name: String, _ backgroundMusicPath: String, _ backgroundImagePath: String, _ killsRequired: Int, _ monsters: [Monster]){
+    init(_ name: String, _ backgroundMusicPath: String, _ backgroundImagePath: String, _ iconPath: String, _ killsRequired: Int, _ monsters: [Monster]){
         self.Name = name
         self.BackgroundMusicPath = backgroundMusicPath
         self.BackgroundImagePath = backgroundImagePath
+        self.IconPath = iconPath
         self.KillsRequired = killsRequired
         self.Monsters = monsters
     }
@@ -50,6 +53,7 @@ public class Level{
             let name = levelData["name"] as? String ?? ""
             let bgm = levelData["backgroundMusic"] as? String ?? ""
             let bgi = levelData["backgroundImage"] as? String ?? ""
+            let icon = levelData["icon"] as? String ?? ""
             let killsRequired = levelData["killsRequired"] as? Int ?? 10
             
             print(killsRequired)
@@ -57,7 +61,7 @@ public class Level{
             let monsterData = levelData["monsters"]
             if let monsters = monsterData as? [Dictionary<String, AnyObject>] {
                 let monsterObjects = ParseMonsterData(monsters)
-                return Level(name, bgm, bgi, killsRequired, monsterObjects)
+                return Level(name, bgm, bgi, icon, killsRequired, monsterObjects)
             } else {
                 print("level contains no valid monsters")
             }

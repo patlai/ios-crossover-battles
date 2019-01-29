@@ -3,7 +3,7 @@
     "backgroundMusic": "sound/sleepywood_theme.mp3",
     "backgroundImage": "images/sleepywood_background.png",
     "icon": "images/sleepywood_icon.png",
-    "killsRequired": 999999,
+    "killsRequired": 15,
     "monsters": [
         {
             "name": "Mushmom",
