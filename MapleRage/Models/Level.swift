@@ -9,11 +9,14 @@
 import Foundation
 
 public class Level{
+    static let LevelDataDirectory = "data/levels"
+    
     var Name: String
     var BackgroundMusicPath: String
     var BackgroundImagePath: String
     var KillsRequired: Int
     var Monsters: [Monster]
+    var IsCompleted: Bool = false
     
     init(){
         self.Name = ""
@@ -31,8 +34,17 @@ public class Level{
         self.Monsters = monsters
     }
     
+    public static func getLevelFiles() -> Array<String> {
+        let fileNames = IOHelper.GetFileNames(LevelDataDirectory)
+        var paths: Array<String> = Array()
+        for name in fileNames {
+            paths.append(LevelDataDirectory + "/" + NSString(string: name).deletingPathExtension)
+        }
+        return paths
+    }
+    
     public static func LoadLevelFromJSON(_ path: String) -> Level? {
-        let levelData = JSONHelper.ReadFromJSONFile(path)
+        let levelData = IOHelper.ReadFromJSONFile(path)
         
         if(levelData.count > 0 && VerifyLevelData(levelData)){
             let name = levelData["name"] as? String ?? ""

@@ -8,8 +8,13 @@
 
 import Foundation
 
-class JSONHelper{
+class IOHelper{
     
+    
+    /// Reads data from a JSON file
+    ///
+    /// - Parameter filePath: the path to the JSON file
+    /// - Returns: the properties as a dictionary
     public static func ReadFromJSONFile(_ filePath: String) -> Dictionary<String, AnyObject> {
         var p = Bundle.main.path(forResource: filePath, ofType: "json")
         if let path = Bundle.main.path(forResource: filePath, ofType: "json") {
@@ -29,6 +34,24 @@ class JSONHelper{
         
         // return an empty dict if parsing failed
         return [:]
+    }
+    
+    
+    /// Gets the list of files in a given folder
+    ///
+    /// - Parameter path: the folder
+    /// - Returns: the list of files in that folder
+    public static func GetFileNames(_ path: String) -> Array<String> {
+        let fileManager = FileManager.default
+        do {
+            let p = Bundle.main.resourceURL!.appendingPathComponent(path).path
+            let files = try fileManager.contentsOfDirectory(atPath: p)
+            return files
+        } catch {
+            print (error)
+            print("Error while enumerating files at " + path)
+            return []
+        }
     }
     
 }

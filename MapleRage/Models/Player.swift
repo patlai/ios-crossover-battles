@@ -49,7 +49,7 @@ public class Player{
         self.Attack = 50.0
         self.CritChance = 0.5
         self.CurrentExp = 0
-        self.ExpToNextLevel = 500
+        self.ExpToNextLevel = 10
     }
     
     func levelUp(){
@@ -59,7 +59,7 @@ public class Player{
         self.Attack += 10.0
         self.CritChance += 0.01
         self.CurrentExp = 0
-        self.ExpToNextLevel += Int(10.0 * pow(Double(self.Level), 3.0))
+        self.ExpToNextLevel = Int(10.0 * pow(Double(self.Level), 3.0))
     }
     
     func attackMonster(_ monster: Monster) -> (Double, Bool){

@@ -3,6 +3,8 @@ import AVFoundation
 
 class GameScene: SKScene {
     let player = Player.Shared
+    var currentLevelNumber = 0
+    var controller = GameViewController()
     
     var canHitMonster: Bool = true
     
@@ -10,6 +12,7 @@ class GameScene: SKScene {
     var currentMonster = Monster()
     var currentMonsterIndex = 0
     var currentLevel = Level()
+    var levelFiles = Level.getLevelFiles()
     
     //let monsterNode = SKSpriteNode(imageNamed: "mushroom/f0.png")
     let monsterNode = SKSpriteNode()
@@ -53,6 +56,10 @@ class GameScene: SKScene {
         run(sound)
     }
     
+    
+    /// Plays a background track using the AVAudioPlayer
+    ///
+    /// - Parameter filename: path to the audio file
     func playBackgroundMusic(_ filename: String) {
         let url = Bundle.main.url(forResource: filename, withExtension: nil)
         guard let newURL = url else {
@@ -74,6 +81,10 @@ class GameScene: SKScene {
         }
     }
     
+    
+    /// Loads the UI
+    ///
+    /// - Parameter view: the associated view
     func loadUi(_ view: SKView){
         let monsterHPLocation = CGPoint(
             x: view.frame.width / 2,
@@ -174,6 +185,12 @@ class GameScene: SKScene {
         self.addChild(levelUpButton)
     }
     
+    
+    /// Loads a monster and spawns it at the selected point
+    ///
+    /// - Parameters:
+    ///   - monster: <#monster description#>
+    ///   - location: <#location description#>
     func loadMonster(_ monster: Monster, _ location: CGPoint){
         monsterNameLabel.text = monster.Name
         monsterNameLabel.fontName = defaultFontName
@@ -187,6 +204,13 @@ class GameScene: SKScene {
         currentMonster = monster
     }
     
+    /// Loads the files containing level data from the level data directory
+    func getLevelData(){
+        
+    }
+    
+    
+    /// Loads a level and its sprites into the game scene
     func loadLevel(_ level: Level, _ location: CGPoint){
         levelNameLabel.text = level.Name
         levelNameLabel.fontName = defaultFontName
@@ -196,15 +220,6 @@ class GameScene: SKScene {
              self.addChild(levelNameLabel)
         }
         
-//        let audioNode = SKAudioNode(fileNamed: level.BackgroundMusicPath)
-//
-//        if (self.children.contains(backgroundSound)){
-//            backgroundSound.removeFromParent()
-//            backgroundSound = audioNode
-//        } else {
-//            backgroundSound = SKAudioNode(fileNamed: level.BackgroundMusicPath)
-//        }
-//        self.addChild(backgroundSound)
         playBackgroundMusic(level.BackgroundMusicPath)
         
         let backgroundImage = SKSpriteNode(imageNamed: level.BackgroundImagePath)
@@ -234,9 +249,14 @@ class GameScene: SKScene {
         )
         
         loadUi(view)
+
+        if (self.levelFiles.count <= 0){
+            print("no level data found")
+            exit(1)
+        }
         
-        // load the first level from JSON data
-        if let level = Level.LoadLevelFromJSON("data/levels/L1"){
+         // load the first level from JSON data
+        if let level = Level.LoadLevelFromJSON(levelFiles[currentLevelNumber]){
            loadLevel(level, center)
         }
         
@@ -357,15 +377,23 @@ class GameScene: SKScene {
             // load the next monster
             self.currentMonsterIndex = Int.random(in: 0 ..< self.currentLevel.Monsters.count)
             self.monsterHPLabel.text = ""
-            if (self.player.NumberOfKills < self.currentLevel.KillsRequired){
+            if (self.player.NumberOfKills < self.currentLevel.KillsRequired
+                || self.currentLevel.IsCompleted
+                || self.currentLevelNumber >= self.levelFiles.count - 1){
                 // there are still monsters in the current level
+                // or the level is already complete and the player is revisiting it
+                // or there are no more levels to load
+                // -> spawn the next monster
                 self.loadMonster(
                     self.currentLevel.Monsters[self.currentMonsterIndex],
                     CGPoint( x: self.frame.width / 2, y: self.frame.height / 2)
                 )
             } else {
-                // no more monsters in current level -> load the next level
-                if let level = Level.LoadLevelFromJSON("data/levels/L2"){
+                // no more monsters in current level and the player has completed it for the first time
+                // -> load the next level
+                self.currentLevel.IsCompleted = true
+                self.currentLevelNumber += 1
+                if let level = Level.LoadLevelFromJSON(self.levelFiles[self.currentLevelNumber]){
                     let center = CGPoint(
                         x: self.frame.width / 2,
                         y: self.frame.height / 2
