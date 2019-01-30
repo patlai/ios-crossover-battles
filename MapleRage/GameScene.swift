@@ -2,6 +2,8 @@ import SpriteKit
 import AVFoundation
 
 class GameScene: SKScene {
+    let serialQueue = DispatchQueue(label: "queue")
+    
     let player = Player.Shared
     
     var currentLevelNumber: Int = 0 {
@@ -244,33 +246,13 @@ class GameScene: SKScene {
         backgroundImage.zPosition = -1000
         self.addChild(backgroundImage)
         
-        let firstMonster = level.Monsters[0]
-        loadMonster(firstMonster, location)
+        loadMonster(level.Monsters[Int.random(in: 0 ..< level.Monsters.count)], location)
         
         currentLevel = level
         
         if (!levelIcons.contains(level.IconPath)){
             levelIcons.append(level.IconPath)
         }
-        
-        // insert previous level button
-        if (currentLevelNumber > 0 && currentLevelNumber < levelFiles.count){
-            previousLevelButton = SKSpriteNode(imageNamed: levelIcons[currentLevelNumber - 1])
-            previousLevelButton.position = CGPoint(x: 16, y: self.frame.height / 3)
-            self.addChild(previousLevelButton)
-        } else {
-            previousLevelButton.removeFromParent()
-        }
-        
-        // insert next level button
-        if (currentLevelNumber < levelFiles.count - 1 && currentLevelNumber < levelIcons.count - 1){
-            nextLevelButton = SKSpriteNode(imageNamed: levelIcons[currentLevelNumber + 1])
-            nextLevelButton.position = CGPoint(x: self.frame.width - 16, y: self.frame.height / 3)
-            self.addChild(nextLevelButton)
-        } else {
-             nextLevelButton.removeFromParent()
-        }
-        
     }
     
     // runs immediately after the scene is presented
@@ -434,7 +416,34 @@ class GameScene: SKScene {
         killCountLabel.text = "Kills: " + String(player.NumberOfKills)
     }
     
+    func canLoadPreviousLevel() -> Bool {
+        return currentLevelNumber > 0 && currentLevelNumber < levelFiles.count
+    }
+    
+    func canLoadNextLevel() -> Bool {
+        return currentLevelNumber < levelFiles.count - 1 && currentLevelNumber < levelIcons.count - 1
+    }
+    
     func loadCurrentLevel(){
+        // insert previous level button
+        if (canLoadPreviousLevel()){
+            previousLevelButton = SKSpriteNode(imageNamed: levelIcons[currentLevelNumber - 1])
+            previousLevelButton.position = CGPoint(x: 16, y: self.frame.height / 3)
+            self.addChild(previousLevelButton)
+        } else {
+            previousLevelButton.removeFromParent()
+        }
+        
+        // insert next level button
+        if (canLoadNextLevel()){
+            nextLevelButton = SKSpriteNode(imageNamed: levelIcons[currentLevelNumber + 1])
+            nextLevelButton.position = CGPoint(x: self.frame.width - 16, y: self.frame.height / 3)
+            self.addChild(nextLevelButton)
+        } else {
+            nextLevelButton.removeFromParent()
+        }
+        
+        print ("loading level: " + String(currentLevelNumber))
         if let level = Level.LoadLevelFromJSON(self.levelFiles[self.currentLevelNumber]){
             let center = CGPoint(
                 x: self.frame.width / 2,
@@ -570,9 +579,9 @@ class GameScene: SKScene {
                 toggleSuperExp()
             } else if (levelUpButton.frame.contains(tapLocation) ){
                 handleLevelUp()
-            } else if (previousLevelButton.frame.contains(tapLocation)){
+            } else if (previousLevelButton.frame.contains(tapLocation) && canLoadPreviousLevel()){
                 currentLevelNumber -= 1
-            } else if (nextLevelButton.frame.contains(tapLocation)) {
+            } else if (nextLevelButton.frame.contains(tapLocation) && canLoadNextLevel()) {
                 currentLevelNumber += 1
             } else {
                 self.handleHit(currentMonster, tapLocation)
