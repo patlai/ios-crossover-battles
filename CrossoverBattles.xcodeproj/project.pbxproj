@@ -24,6 +24,7 @@
 		944E414321FD1A99005B9A48 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 944E414121FD1A99005B9A48 /* Main.storyboard */; };
 		944E414521FD1A9A005B9A48 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 944E414421FD1A9A005B9A48 /* Assets.xcassets */; };
 		944E414821FD1A9A005B9A48 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 944E414621FD1A9A005B9A48 /* LaunchScreen.storyboard */; };
+		9474FFEB220547F3004268CB /* UIHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9474FFEA220547F3004268CB /* UIHelper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,6 +47,7 @@
 		944E414421FD1A9A005B9A48 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		944E414721FD1A9A005B9A48 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		944E414921FD1A9A005B9A48 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9474FFEA220547F3004268CB /* UIHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,6 +76,7 @@
 			children = (
 				9427026F21FE4407003F00BE /* IOHelper.swift */,
 				9401B46D21FFB17400DB90FD /* EffectsHelper.swift */,
+				9474FFEA220547F3004268CB /* UIHelper.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -198,6 +201,7 @@
 				944E413E21FD1A99005B9A48 /* GameScene.swift in Sources */,
 				944E414021FD1A99005B9A48 /* GameViewController.swift in Sources */,
 				9427027A21FE6950003F00BE /* Player.swift in Sources */,
+				9474FFEB220547F3004268CB /* UIHelper.swift in Sources */,
 				944E413821FD1A99005B9A48 /* AppDelegate.swift in Sources */,
 				9401B46E21FFB17400DB90FD /* EffectsHelper.swift in Sources */,
 				9427027021FE4407003F00BE /* IOHelper.swift in Sources */,

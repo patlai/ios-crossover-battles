@@ -14,6 +14,7 @@ class GameScene: SKScene {
     var controller = GameViewController()
     
     var canHitMonster: Bool = true
+    var hitFeedback = false
     
     var monsters: [Monster] = Array()
     var currentMonster = Monster()
@@ -32,6 +33,8 @@ class GameScene: SKScene {
     
     var previousLevelButton = SKSpriteNode()
     var nextLevelButton = SKSpriteNode()
+    
+    var toggleHapticButton = SKSpriteNode()
     
     var specialAttackButton = SKSpriteNode()
     var superDamageButton = SKSpriteNode()
@@ -178,6 +181,8 @@ class GameScene: SKScene {
         self.addChild(uiBackground)
         
         let iconOffset = CGFloat(36.0)
+        
+        UIHelper.addButton(&toggleHapticButton, self, "images/vibration_icon.png", x: 16, y: 2 * self.frame.height / 3)
         
         specialAttackButton = SKSpriteNode(imageNamed: "sprites/genesis/icon.png")
         specialAttackButton.position = CGPoint(x: self.frame.width - 16, y: 2 * self.frame.height / 3)
@@ -485,6 +490,11 @@ class GameScene: SKScene {
             let damage = attackResult.0
             let isCriticalHit = attackResult.1
             
+            // send haptic feedback
+            if (hitFeedback){
+                UIHelper.vibrateWithHaptic(.light)
+            }
+            
             dealDamageToMonster(monster, damage, tapPoint, isCriticalHit, damageLabel)
         } else {
             damageLabel.text = "MISS"
@@ -550,6 +560,11 @@ class GameScene: SKScene {
                 overlay.removeFromParent()
             })
         })
+    }§
+    
+    func toggleHitFeedback(){
+        self.hitFeedback = !self.hitFeedback
+        showPopupLabel("Haptic: " + (self.hitFeedback ? "ON" : "OFF"))
     }
     
     func toggleSuperDamage(){
@@ -563,14 +578,12 @@ class GameScene: SKScene {
         showPopupLabel("Super EXP: " + (player.HasSuperExp ? "ON" : "OFF"))
     }
     
-    func loadPreviousLevel(){
-        
-    }
-    
     @objc func tap (recognizer: UIGestureRecognizer){
         let viewLocation = recognizer.location(in: view)
         let tapLocation = convertPoint(fromView: viewLocation)
         if (canHitMonster){
+            var tappedButton = true
+            
             if(specialAttackButton.frame.contains(tapLocation)){
                 handleSpecialAttack(currentMonster, tapLocation)
             } else if (superDamageButton.frame.contains(tapLocation)){
@@ -583,8 +596,15 @@ class GameScene: SKScene {
                 currentLevelNumber -= 1
             } else if (nextLevelButton.frame.contains(tapLocation) && canLoadNextLevel()) {
                 currentLevelNumber += 1
+            } else if (toggleHapticButton.frame.contains(tapLocation)) {
+               toggleHitFeedback()
             } else {
                 self.handleHit(currentMonster, tapLocation)
+                tappedButton = false
+            }
+            
+            if (tappedButton){
+                UIHelper.vibrateWithHaptic(.heavy)
             }
         }
     }
