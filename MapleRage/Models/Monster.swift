@@ -11,8 +11,8 @@ import SpriteKit
 
 class Monster{
     var Name: String
-    var MaxHP: Double
-    var CurrentHP: Double
+    var MaxHP: Double = 0.0
+    var CurrentHP: Double = 0.0
     var Node: SKSpriteNode
     var DefaultAnimation: SKAction
     var DamageAnimation: SKAction
@@ -20,10 +20,13 @@ class Monster{
     var DamageSound: SKAction
     var DeathSound: SKAction
     var HitBox: CGRect
-    var HasVerticalMovement: Bool
-    var MoveSpeed: Int
-    var Defense: Int
-    var Exp: Int
+    var HasVerticalMovement: Bool = false
+    var MoveSpeed: Int = 0
+    var Defense: Int = 0
+    var Exp: Int = 0
+    
+    var DropRate: Double = 0.0
+    var DropRarity: Double = 0.0
     
     var Width: CGFloat
     var Height: CGFloat
@@ -68,6 +71,8 @@ class Monster{
         _ moveSpeed: Int = 0,
         _ defense: Int = 0,
         _ exp: Int = 0,
+        _ dropRate: Double = 0.0,
+        _ dropRarity: Double = 0.0,
         _ hasVerticalMovement: Bool = false)
     {
         self.Name = Name
@@ -83,6 +88,9 @@ class Monster{
         self.HasVerticalMovement = hasVerticalMovement
         self.Defense = defense
         self.Exp = exp
+        
+        self.DropRate = dropRate
+        self.DropRarity = dropRarity
         
         self.Width = self.Node.size.width
         self.Height = self.Node.size.height
@@ -107,6 +115,45 @@ class Monster{
     
     public static func getSoundClip(_ soundFilePath: String, _ wait: Bool = false) -> SKAction {
         return SKAction.playSoundFileNamed(soundFilePath, waitForCompletion: wait)
+    }
+    
+    /// Loads a monster from a dictionary containing monster data
+    public static func loadData(_ data: Dictionary<String, AnyObject>) -> Monster {
+        let name = data["name"] as? String ?? ""
+        let hp = Double(data["hitpoints"] as? Int ?? 0)
+        let animationPrefix = data["animationPrefix"] as? String ?? ""
+        let animationSuffix = data["animationSuffix"] as? String ?? ""
+        let deathAnimationPrefix = data["deathAnimationPrefix"] as? String ?? ""
+        let deathAnimationSuffix = data["deathAnimationSuffix"] as? String ?? ""
+        let startingFrame = data["defaultAnimation"] as? String ?? ""
+        let damageSound = data["damageSound"] as? String ?? ""
+        let deathSound = data["deathSound"] as? String ?? ""
+        let hitAnimationPath = data["hitAnimation"] as? String ?? ""
+        let numberOfAnimationFrames = data["numberOfAnimationFrames"] as? Int ?? 0
+        let numberOfDeathAnimationFrames = data["numberOfDeathAnimationFrames"] as? Int ?? 0
+        let moveSpeed = data["moveSpeed"] as? Int ?? 0
+        let defense = data["defense"] as? Int ?? 0
+        let exp = data["exp"] as? Int ?? 0
+        let dropRate = data["dropRate"] as? Double ?? 0.0
+        let dropRarity = data["dropRarity"] as? Double ?? 0.0
+        
+        let monst = Monster(
+            name,
+            hp,
+            startingFrame,
+            Monster.getDefaultAnimation(animationPrefix, animationSuffix, numberOfAnimationFrames, 0.2),
+            Monster.getSpecialAnimation(hitAnimationPath, 0.2),
+            Monster.getDefaultAnimation(deathAnimationPrefix, deathAnimationSuffix, numberOfDeathAnimationFrames, 0.2),
+            Monster.getSoundClip(damageSound),
+            Monster.getSoundClip(deathSound),
+            moveSpeed,
+            defense,
+            exp,
+            dropRate,
+            dropRarity
+        )
+        
+        return monst
     }
 }
 

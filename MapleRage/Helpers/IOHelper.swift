@@ -16,7 +16,6 @@ class IOHelper{
     /// - Parameter filePath: the path to the JSON file
     /// - Returns: the properties as a dictionary
     public static func ReadFromJSONFile(_ filePath: String) -> Dictionary<String, AnyObject> {
-        var p = Bundle.main.path(forResource: filePath, ofType: "json")
         if let path = Bundle.main.path(forResource: filePath, ofType: "json") {
             do {
                 let data = try Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe)

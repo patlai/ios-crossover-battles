@@ -17,12 +17,21 @@ public class Player{
     var MP: Double
     var Attack: Double
     var CritChance: Double
+    var AttackMultiplier: Double = 1.0
+    
     var CurrentExp: Int
     var ExpToNextLevel: Int
     var NumberOfKills: Int = 0
     var ExpRate: Double = 1.0
-    var AttackMultiplier: Double = 1.0
+    
+    var CurrentWeapon: Weapon = Weapon.GetEmptyWeapon(){
+        willSet{
+            self.Attack += Double(newValue.Attack)
+        }
+    }
+    
     var CompletedLevels: Array<Bool>
+    
     var HasSuperAttack: Bool = false {
         willSet{
             if (newValue) {

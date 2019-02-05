@@ -25,6 +25,10 @@
 		944E414521FD1A9A005B9A48 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 944E414421FD1A9A005B9A48 /* Assets.xcassets */; };
 		944E414821FD1A9A005B9A48 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 944E414621FD1A9A005B9A48 /* LaunchScreen.storyboard */; };
 		9474FFEB220547F3004268CB /* UIHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9474FFEA220547F3004268CB /* UIHelper.swift */; };
+		9474FFED22062E2D004268CB /* Weapon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9474FFEC22062E2D004268CB /* Weapon.swift */; };
+		9474FFEF2206356D004268CB /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9474FFEE2206356D004268CB /* Item.swift */; };
+		9474FFF122063B20004268CB /* Rarity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9474FFF022063B20004268CB /* Rarity.swift */; };
+		9474FFF322064A46004268CB /* GameController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9474FFF222064A46004268CB /* GameController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,6 +52,10 @@
 		944E414721FD1A9A005B9A48 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		944E414921FD1A9A005B9A48 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9474FFEA220547F3004268CB /* UIHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIHelper.swift; sourceTree = "<group>"; };
+		9474FFEC22062E2D004268CB /* Weapon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Weapon.swift; sourceTree = "<group>"; };
+		9474FFEE2206356D004268CB /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
+		9474FFF022063B20004268CB /* Rarity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rarity.swift; sourceTree = "<group>"; };
+		9474FFF222064A46004268CB /* GameController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,9 +72,13 @@
 		9427026921FD74F1003F00BE /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				9474FFF222064A46004268CB /* GameController.swift */,
 				9427026A21FD7519003F00BE /* Monster.swift */,
 				9427027521FE46D7003F00BE /* Level.swift */,
 				9427027921FE6950003F00BE /* Player.swift */,
+				9474FFEC22062E2D004268CB /* Weapon.swift */,
+				9474FFEE2206356D004268CB /* Item.swift */,
+				9474FFF022063B20004268CB /* Rarity.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -201,10 +213,14 @@
 				944E413E21FD1A99005B9A48 /* GameScene.swift in Sources */,
 				944E414021FD1A99005B9A48 /* GameViewController.swift in Sources */,
 				9427027A21FE6950003F00BE /* Player.swift in Sources */,
+				9474FFED22062E2D004268CB /* Weapon.swift in Sources */,
+				9474FFF122063B20004268CB /* Rarity.swift in Sources */,
+				9474FFEF2206356D004268CB /* Item.swift in Sources */,
 				9474FFEB220547F3004268CB /* UIHelper.swift in Sources */,
 				944E413821FD1A99005B9A48 /* AppDelegate.swift in Sources */,
 				9401B46E21FFB17400DB90FD /* EffectsHelper.swift in Sources */,
 				9427027021FE4407003F00BE /* IOHelper.swift in Sources */,
+				9474FFF322064A46004268CB /* GameController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

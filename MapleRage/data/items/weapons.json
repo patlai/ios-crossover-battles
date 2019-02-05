@@ -1,0 +1,25 @@
+{
+    "Weapons": [
+        {
+            "Name": "Sword",
+            "Id": 0,
+            "Attack": 15,
+            "Drop": 1,
+            "Icon": "sprites/items/weapons/sword.png"
+        },
+        {
+            "Name": "Long Sword",
+            "Id": 1,
+            "Attack": 20,
+            "Drop": 0.8,
+            "Icon": "sprites/items/weapons/longSword.gif"
+        },
+        {
+            "Name": "Timeless Executioners",
+            "Id": 2,
+            "Attack": 250,
+            "Drop": 0.05,
+            "Icon": "sprites/items/weapons/timelessSword.png"
+        }
+    ]
+}

@@ -5,6 +5,7 @@ class GameScene: SKScene {
     let serialQueue = DispatchQueue(label: "queue")
     
     let player = Player.Shared
+    let gameController = GameController.Shared
     
     var currentLevelNumber: Int = 0 {
         didSet{
@@ -51,6 +52,9 @@ class GameScene: SKScene {
     var playerExpLabel = SKLabelNode()
     var playerExpBar = SKShapeNode()
     var killCountLabel = SKLabelNode()
+    
+    var currentWeaponIcon = SKSpriteNode()
+    var currentWeaponLabel = SKLabelNode()
     
     let label = SKLabelNode(text: "Tap the screen to start")
     let maxLabelSize = 90.0
@@ -199,8 +203,25 @@ class GameScene: SKScene {
         levelUpButton = SKSpriteNode(imageNamed: "sprites/maple_warrior/icon.png")
         levelUpButton.position = CGPoint(x: self.frame.width - 16, y: 2 * self.frame.height / 3 - iconOffset * 3)
         self.addChild(levelUpButton)
+        
+        updateWeaponUi()
+        currentWeaponLabel.fontName = defaultFontName
+        currentWeaponLabel.fontSize = CGFloat(uiFontSize)
+        currentWeaponLabel.position = CGPoint(x: 64, y: 32)
+        self.addChild(currentWeaponLabel)
     }
     
+    func updateWeaponUi(){
+        currentWeaponLabel.text = player.CurrentWeapon.Name
+        
+        if (self.children.contains(currentWeaponIcon)){
+            currentWeaponIcon.removeFromParent()
+        }
+        
+        currentWeaponIcon = SKSpriteNode(imageNamed: player.CurrentWeapon.Icon)
+        currentWeaponIcon.position = CGPoint(x: 32, y: 32)
+        self.addChild(currentWeaponIcon)
+    }
     
     /// Loads a monster and spawns it at the selected point
     ///
@@ -264,11 +285,7 @@ class GameScene: SKScene {
     override func didMove(to view: SKView){
         view.ignoresSiblingOrder = false
         
-        let center = CGPoint(
-            x: view.frame.width / 2,
-            y: view.frame.height / 2
-        )
-        
+        player.CurrentWeapon = gameController.GetDefaultWeapon()
         loadUi(view)
 
         if (self.levelFiles.count <= 0){
@@ -560,7 +577,7 @@ class GameScene: SKScene {
                 overlay.removeFromParent()
             })
         })
-    }§
+    }
     
     func toggleHitFeedback(){
         self.hitFeedback = !self.hitFeedback

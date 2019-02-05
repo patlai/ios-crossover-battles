@@ -20,7 +20,9 @@
             "numberOfDeathAnimationFrames": 6,
             "moveSpeed": 5,
             "defense": 30,
-            "exp": 150
+            "exp": 150,
+            "dropRate": 0.5,
+            "dropRarity": 0.5
         },
         {
             "name": "Stump",
@@ -37,7 +39,9 @@
             "numberOfDeathAnimationFrames": 3,
             "moveSpeed": 3,
             "defense": 50,
-            "exp": 100
+            "exp": 100,
+            "dropRate": 0.5,
+            "dropRarity": 0.5
         },
         {
             "name": "Green Slime",
@@ -54,7 +58,9 @@
             "numberOfDeathAnimationFrames": 4,
             "moveSpeed": 3,
             "defense": 30,
-            "exp": 80
+            "exp": 80,
+            "dropRate": 0.5,
+            "dropRarity": 0.5
         },
         {
             "name": "Stone Golem",
@@ -71,7 +77,9 @@
             "numberOfDeathAnimationFrames": 7,
             "moveSpeed": 3,
             "defense": 50,
-            "exp": 120
+            "exp": 120,
+            "dropRate": 0.5,
+            "dropRarity": 0.5
         },
         {
             "name": "Red Snail",
@@ -88,7 +96,9 @@
             "numberOfDeathAnimationFrames": 3,
             "moveSpeed": 1,
             "defense": 30,
-            "exp": 60
+            "exp": 60,
+            "dropRate": 0.5,
+            "dropRarity": 0.5
         },
         {
             "name": "Ribbon Pig",
@@ -105,7 +115,9 @@
             "numberOfDeathAnimationFrames": 3,
             "moveSpeed": 4,
             "defense": 50,
-            "exp": 85
+            "exp": 85,
+            "dropRate": 0.5,
+            "dropRarity": 0.5
         }
     ]
 }

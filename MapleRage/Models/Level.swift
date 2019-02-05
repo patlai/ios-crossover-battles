@@ -46,6 +46,7 @@ public class Level{
         return paths
     }
     
+    /// Loads level data from a JSON file
     public static func LoadLevelFromJSON(_ path: String) -> Level? {
         let levelData = IOHelper.ReadFromJSONFile(path)
         
@@ -55,8 +56,6 @@ public class Level{
             let bgi = levelData["backgroundImage"] as? String ?? ""
             let icon = levelData["icon"] as? String ?? ""
             let killsRequired = levelData["killsRequired"] as? Int ?? 10
-            
-            print(killsRequired)
             
             let monsterData = levelData["monsters"]
             if let monsters = monsterData as? [Dictionary<String, AnyObject>] {
@@ -68,49 +67,23 @@ public class Level{
         } else{
             print("unable to parse level data")
         }
+        
         return nil
     }
     
+    /// Parses the JSON data to get the list of monsters contained in the level
     static func ParseMonsterData(_ data: [Dictionary<String, AnyObject>]) -> [Monster]{
         var levelMonsters: Array<Monster> = Array()
         
-        for monster in data{
-            let name = monster["name"] as? String ?? ""
-            let hp = Double(monster["hitpoints"] as? Int ?? 0)
-            let animationPrefix = monster["animationPrefix"] as? String ?? ""
-            let animationSuffix = monster["animationSuffix"] as? String ?? ""
-            let deathAnimationPrefix = monster["deathAnimationPrefix"] as? String ?? ""
-            let deathAnimationSuffix = monster["deathAnimationSuffix"] as? String ?? ""
-            let startingFrame = monster["defaultAnimation"] as? String ?? ""
-            let damageSound = monster["damageSound"] as? String ?? ""
-            let deathSound = monster["deathSound"] as? String ?? ""
-            let hitAnimationPath = monster["hitAnimation"] as? String ?? ""
-            let numberOfAnimationFrames = monster["numberOfAnimationFrames"] as? Int ?? 0
-            let numberOfDeathAnimationFrames = monster["numberOfDeathAnimationFrames"] as? Int ?? 0
-            let moveSpeed = monster["moveSpeed"] as? Int ?? 0
-            let defense = monster["defense"] as? Int ?? 0
-            let exp = monster["exp"] as? Int ?? 0
-            
-            let currentMonster = Monster(
-                name,
-                hp,
-                startingFrame,
-                Monster.getDefaultAnimation(animationPrefix, animationSuffix, numberOfAnimationFrames, 0.2),
-                Monster.getSpecialAnimation(hitAnimationPath, 0.2),
-                Monster.getDefaultAnimation(deathAnimationPrefix, deathAnimationSuffix, numberOfDeathAnimationFrames, 0.2),
-                Monster.getSoundClip(damageSound),
-                Monster.getSoundClip(deathSound),
-                moveSpeed,
-                defense,
-                exp
-            )
-            
+        for monsterData in data{
+            let currentMonster = Monster.loadData(monsterData)
             levelMonsters.append(currentMonster)
         }
         
         return levelMonsters
     }
     
+    /// Verifies that the data being read corresponds to monster data
     static func VerifyLevelData(_ data: Dictionary<String, AnyObject>) -> Bool{
         return data.keys.contains("name")
             && data.keys.contains("backgroundMusic")
