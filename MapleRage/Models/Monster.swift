@@ -28,8 +28,8 @@ class Monster{
     var DropRate: Double = 0.0
     var DropRarity: Double = 0.0
     
-    var Width: CGFloat
-    var Height: CGFloat
+    var Width: CGFloat = 256.0
+    var Height: CGFloat = 256.0
     
     var Position: CGPoint{
         willSet{
@@ -40,9 +40,7 @@ class Monster{
     }
     
     init(){
-        self.Name = ""
-        self.MaxHP = 0
-        self.CurrentHP = 0
+        self.Name = "Monster"
         self.DefaultAnimation = SKAction()
         self.DamageAnimation = SKAction()
         self.DeathAnimation = SKAction()
@@ -51,13 +49,8 @@ class Monster{
         self.Node = SKSpriteNode()
         self.HitBox = CGRect()
         self.Position = CGPoint()
-        self.Width = 0
-        self.Height = 0
-        self.HasVerticalMovement = false
-        self.MoveSpeed = 0
-        self.Defense = 0
-        self.Exp = 0
     }
+    
     
     init (
         _ Name: String,
@@ -99,6 +92,7 @@ class Monster{
         self.HitBox = CGRect(x: 0, y: 0, width: self.Width, height: self.Height)
     }
     
+    
     public static func getDefaultAnimation(_ prefix: String, _ suffix: String, _ numberOfFrames: Int, _ frameDuration: Double, _ offset: Int = 0) -> SKAction{
         var frames: [SKTexture] = Array()
         for i in 0 ..< numberOfFrames {
@@ -109,13 +103,33 @@ class Monster{
         return SKAction.animate(with: frames, timePerFrame: frameDuration)
     }
     
+    
     public static func getSpecialAnimation(_ spritePath: String, _ frameDuration: Double) -> SKAction {
         return SKAction.animate(with: Array([SKTexture.init(imageNamed: spritePath)]), timePerFrame: frameDuration )
     }
     
+    
     public static func getSoundClip(_ soundFilePath: String, _ wait: Bool = false) -> SKAction {
         return SKAction.playSoundFileNamed(soundFilePath, waitForCompletion: wait)
     }
+    
+    
+    public func dropItem() -> Weapon {
+        let rarity = Double.random(in: 0.0 ..< self.DropRarity)
+        var rand = Int.random(in: 0 ..< GameController.Shared.Weapons.count)
+        
+        // try 10 times -> or else return empty
+        for _ in 0 ..< 10 {
+            rand = Int.random(in: 0 ..< GameController.Shared.Weapons.count)
+            if (GameController.Shared.Weapons[rand].DropRate > rarity){
+                print("got weapon: " + GameController.Shared.Weapons[rand].Name)
+                return GameController.Shared.Weapons[rand]
+            }
+        }
+        
+        return Weapon.GetEmptyWeapon()
+    }
+    
     
     /// Loads a monster from a dictionary containing monster data
     public static func loadData(_ data: Dictionary<String, AnyObject>) -> Monster {

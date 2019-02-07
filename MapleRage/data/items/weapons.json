@@ -11,7 +11,7 @@
             "Name": "Long Sword",
             "Id": 1,
             "Attack": 20,
-            "Drop": 0.8,
+            "Drop": 0.5,
             "Icon": "sprites/items/weapons/longSword.gif"
         },
         {

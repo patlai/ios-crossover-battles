@@ -32,6 +32,9 @@ class GameScene: SKScene {
     let monsterHPLabel = SKLabelNode()
     let defaultFontName = "Avenir"
     
+    var dropNode = SKSpriteNode()
+    var dropItem = Weapon.GetEmptyWeapon()
+    
     var previousLevelButton = SKSpriteNode()
     var nextLevelButton = SKSpriteNode()
     
@@ -402,11 +405,80 @@ class GameScene: SKScene {
         updateExpLabel()
     }
     
+    
+    func pickUpItem(_ droppedWeapon: Weapon){
+        // if the player has a weaker weapon, get the weapon
+        // or else give exp equal to the weapon's attack
+        if (droppedWeapon.Attack > player.CurrentWeapon.Attack){
+            player.CurrentWeapon = droppedWeapon
+            showPopupLabel("got weapon: " + droppedWeapon.Name)
+            self.updateWeaponUi()
+        } else {
+            giveExp(droppedWeapon.Attack)
+        }
+        
+        let moveUp = SKAction.moveBy(x: 0, y: 50, duration: 0.5)
+        let fadeOut = SKAction.fadeOut(withDuration: 0.5)
+        let pickupAction = SKAction.group([moveUp, fadeOut])
+        dropNode.run(pickupAction, completion: {
+            self.dropNode.removeFromParent()
+        })
+        
+    }
+    
+    
+    /// Generates a random point for the drop and creates a sprite of the dropped item at that point
+    func handleDrop(_ droppedWeapon: Weapon){
+        dropItem = droppedWeapon
+        
+        // make sure there's no more than 1 drop at a time
+        if (self.children.contains(dropNode)){
+            dropNode.removeFromParent()
+        }
+        
+        let W = self.frame.width
+        let H = self.frame.height
+        let dropBounds = CGRect(x: 0.1 * W, y: 0.1 * H, width: 0.8 * W, height: 0.6 * H)
+        
+        dropNode = SKSpriteNode(imageNamed: droppedWeapon.Icon)
+        dropNode.position = CGPoint(
+            x: CGFloat.random(in: dropBounds.minX ... dropBounds.maxX),
+            y: CGFloat.random(in: dropBounds.minY ... dropBounds.maxY)
+        )
+        
+        self.addChild(dropNode)
+        
+        // when the item drops, it will jump up and rotate and then go down while continuing to rotate
+        let moveUp = SKAction.moveBy(x: 0, y: 100, duration: 0.5)
+        let moveDown = SKAction.moveBy(x: 0, y: -100, duration: 0.5)
+        let rotate = SKAction.rotate(byAngle: 720 * .pi / 180, duration: 0.5)
+        
+        let firstGroup = SKAction.group([SKAction.sequence([moveUp, rotate])])
+        let dropActions = SKAction.sequence([firstGroup, moveDown])
+        dropNode.run(dropActions)
+        
+        // make the drop sprite bob up and down until the player picks it up
+        let bobbingAction = SKAction.moveBy(x: 0, y: 10, duration: 0.5)
+        let reversed = bobbingAction.reversed()
+        let dropAnimationSequence = SKAction.sequence([bobbingAction, reversed])
+        dropNode.run(SKAction.repeatForever(dropAnimationSequence))
+    }
+    
+    
     func handleDeath(_ monster: Monster){
+        self.canHitMonster = false
+        
         let amount = Int(Double(monster.Exp) * player.ExpRate)
         giveExp(amount)
         
-        self.canHitMonster = false
+        let rng = Double.random(in: 0.0 ... 1.0)
+        print(rng)
+        if (rng < monster.DropRate){
+            print ("dropping item " + String(rng))
+            let weapon =  monster.dropItem()
+            handleDrop(weapon)
+        }
+        
         // get rid of the current monster
         self.playSound(sound: monster.DeathSound)
         monster.Node.run(monster.DeathAnimation, completion: {
@@ -438,13 +510,16 @@ class GameScene: SKScene {
         killCountLabel.text = "Kills: " + String(player.NumberOfKills)
     }
     
+    
     func canLoadPreviousLevel() -> Bool {
         return currentLevelNumber > 0 && currentLevelNumber < levelFiles.count
     }
     
+    
     func canLoadNextLevel() -> Bool {
         return currentLevelNumber < levelFiles.count - 1 && currentLevelNumber < levelIcons.count - 1
     }
+    
     
     func loadCurrentLevel(){
         // insert previous level button
@@ -474,6 +549,7 @@ class GameScene: SKScene {
             self.loadLevel(level, center)
         }
     }
+    
     
     func dealDamageToMonster(_ monster: Monster, _ damage: Double, _ point: CGPoint, _ isCrit: Bool, _ label: SKLabelNode){
         currentMonster.CurrentHP = max(0, currentMonster.CurrentHP - damage)
@@ -615,6 +691,8 @@ class GameScene: SKScene {
                 currentLevelNumber += 1
             } else if (toggleHapticButton.frame.contains(tapLocation)) {
                toggleHitFeedback()
+            } else if (dropNode.frame.contains(tapLocation)){
+                pickUpItem(dropItem)
             } else {
                 self.handleHit(currentMonster, tapLocation)
                 tappedButton = false

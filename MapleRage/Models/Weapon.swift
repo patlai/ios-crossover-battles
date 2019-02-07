@@ -15,14 +15,16 @@ class Weapon: Item{
     
     var Attack: Int
     var WeaponRarity: Rarity.ItemRarity
+    var DropRate: Double
     
     var Icon: String
     
-    init(_ id: Int, _ name: String, _ attack: Int, _ rarity: Rarity.ItemRarity, _ icon: String){
+    init(_ id: Int, _ name: String, _ attack: Int, _ dropRate: Double, _ icon: String){
         self.Id = id
         self.Name = name
         self.Attack = attack
-        self.WeaponRarity = rarity
+        self.DropRate = dropRate
+        self.WeaponRarity = Rarity.ConvertRateToRarity(dropRate)
         self.Icon = icon
     }
     
@@ -40,9 +42,7 @@ class Weapon: Item{
                 let dropRate = weaponData["Drop"] as? Double ?? 0
                 let icon = weaponData["Icon"] as? String ?? ""
                 
-                let rarity = Rarity.ConvertRateToRarity(dropRate)
-                
-                let weapon = Weapon(id, name, attack, rarity, icon)
+                let weapon = Weapon(id, name, attack, dropRate, icon)
                 weapons.append(weapon)
             }
             
@@ -57,6 +57,6 @@ class Weapon: Item{
     }
     
     public static func GetEmptyWeapon() -> Weapon{
-        return Weapon(-1, "Hands", 0, Rarity.ItemRarity.common, "sprites/items/weapons/sword.png")
+        return Weapon(-1, "Hands", 0, 0.0, "sprites/items/weapons/sword.png")
     }
 }
