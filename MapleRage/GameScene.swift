@@ -167,14 +167,10 @@ class GameScene: SKScene {
         )
         uiBackground.addChild(playerAttackLabel)
         
-//        playerExpBar = SKShapeNode(rectOf: CGSize(
-//            width: uiBackgroundWidth,
-//            height: 20))
-//        playerExpBar.fillColor = SKColor.yellow
         playerExpBar = SKSpriteNode(imageNamed: "images/ui/exp_bar.png")
         playerExpBar.anchorPoint = CGPoint (x: 0, y: 0.5)
         playerExpBar.position = CGPoint(
-            x: leftAlignPosition + 2,//playerLevelLabel.position.x + 50,
+            x: leftAlignPosition + 2,
             y: -4
         )
         playerExpBar.xScale = 0
