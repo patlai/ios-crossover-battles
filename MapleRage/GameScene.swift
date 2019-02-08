@@ -2,6 +2,19 @@ import SpriteKit
 import AVFoundation
 
 class GameScene: SKScene {
+    
+    struct zPositions {
+        static let levelBackground = CGFloat(-1000)
+        static let uiBackground = CGFloat(-10)
+        static let monsterNode = CGFloat(-20)
+        static let specialAttackOverlay = CGFloat(-1)
+        static let playerExpBar = CGFloat(2)
+        static let playerExpLabel = CGFloat(3)
+        static let damageLabel = CGFloat(10)
+        static let dropNode = CGFloat(11)
+        static let levelUpAnimation = CGFloat(20)
+    }
+    
     let serialQueue = DispatchQueue(label: "queue")
     
     let player = Player.Shared
@@ -115,7 +128,7 @@ class GameScene: SKScene {
         let uiBackground = SKShapeNode(rectOf: CGSize(width: uiBackgroundWidth, height: uiBackgroundHeight))
         uiBackground.fillColor = SKColor.gray
         uiBackground.position = CGPoint(x: self.frame.width / 2, y: self.frame.height / 12)
-        uiBackground.zPosition = -10
+        uiBackground.zPosition = zPositions.uiBackground
         
         self.addChild(monsterNameLabel)
         
@@ -155,7 +168,7 @@ class GameScene: SKScene {
             x: 0,//playerLevelLabel.position.x + 50,
             y: -10
         )
-        playerExpBar.zPosition = 2
+        playerExpBar.zPosition = zPositions.playerExpBar
         
         playerExpLabel.fontSize = CGFloat(uiFontSize)
         playerExpLabel.fontName = defaultFontName
@@ -164,7 +177,7 @@ class GameScene: SKScene {
             x: 0,
             y: -10
         )
-        playerExpLabel.zPosition = 3
+        playerExpLabel.zPosition = zPositions.playerExpLabel
         uiBackground.addChild(playerExpLabel)
         uiBackground.addChild(playerExpBar)
         
@@ -238,7 +251,7 @@ class GameScene: SKScene {
         
         // remove the last monster from the scene if there was one
         gameController.currentMonster.Node.removeFromParent()
-        gameController.currentMonster.Node.zPosition = -20
+        gameController.currentMonster.Node.zPosition = zPositions.monsterNode
         monster.CurrentHP = monster.MaxHP
         monster.Position = location
         self.addChild(monster.Node)
@@ -273,7 +286,7 @@ class GameScene: SKScene {
         backgroundImage.size.width = ratio * backgroundImage.size.width
 
         // the background image should be the backwards-most layer
-        backgroundImage.zPosition = -1000
+        backgroundImage.zPosition = zPositions.levelBackground
         self.addChild(backgroundImage)
         
         loadMonster(level.Monsters[Int.random(in: 0 ..< level.Monsters.count)], location)
@@ -373,7 +386,7 @@ class GameScene: SKScene {
         let levelUpSound = Monster.getSoundClip("sprites/level_up/sound.mp3")
         let levelUpAnimationNode = SKSpriteNode(imageNamed: "sprites/level_up/l0.png")
         levelUpAnimationNode.position = CGPoint(x: self.frame.width / 2, y: self.frame.height / 4)
-        levelUpAnimationNode.zPosition = 20
+        levelUpAnimationNode.zPosition = zPositions.levelUpAnimation
         
         self.playSound(sound: levelUpSound)
         self.addChild(levelUpAnimationNode)
@@ -450,6 +463,7 @@ class GameScene: SKScene {
         let dropBounds = CGRect(x: 0.1 * W, y: 0.1 * H, width: 0.8 * W, height: 0.6 * H)
         
         dropNode = SKSpriteNode(imageNamed: droppedWeapon.Icon)
+        dropNode.zPosition = zPositions.dropNode
         dropNode.position = CGPoint(
             x: CGFloat.random(in: dropBounds.minX ... dropBounds.maxX),
             y: CGFloat.random(in: dropBounds.minY ... dropBounds.maxY)
@@ -606,7 +620,7 @@ class GameScene: SKScene {
         overlay.fillColor = SKColor.black
         overlay.strokeColor = SKColor.black
         overlay.alpha = 0.0
-        overlay.zPosition = -1
+        overlay.zPosition = zPositions.specialAttackOverlay
         self.addChild(overlay)
         
         let fadeinAction = SKAction.fadeAlpha(to: CGFloat(0.5), duration: 0.5)
@@ -638,7 +652,7 @@ class GameScene: SKScene {
                 let damageLabel = SKLabelNode()
                 damageLabel.position = CGPoint(x: self.frame.width / 2, y: 1.1 * self.frame.height / 2)
                 damageLabel.fontSize = CGFloat(self.defaultFontSize)
-                damageLabel.zPosition = 10
+                damageLabel.zPosition = zPositions.damageLabel
                 self.addChild(damageLabel)
                 self.animateDamageLabel(damageLabel)
                 
