@@ -216,6 +216,7 @@ class GameScene: SKScene {
     
     func updateWeaponUi(){
         currentWeaponLabel.text = player.CurrentWeapon.Name
+        updateAttackLabel()
         
         if (self.children.contains(currentWeaponIcon)){
             currentWeaponIcon.removeFromParent()
@@ -239,6 +240,7 @@ class GameScene: SKScene {
         
         // remove the last monster from the scene if there was one
         currentMonster.Node.removeFromParent()
+        currentMonster.Node.zPosition = -20
         monster.CurrentHP = monster.MaxHP
         monster.Position = location
         self.addChild(monster.Node)
@@ -265,13 +267,14 @@ class GameScene: SKScene {
         playBackgroundMusic(level.BackgroundMusicPath)
         
         let backgroundImage = SKSpriteNode(imageNamed: level.BackgroundImagePath)
+        
+        // resize the background image according to the screen's aspect ratio
         backgroundImage.position = CGPoint(x: frame.size.width / 2, y: frame.size.height / 2)
-        if (backgroundImage.size.height < frame.size.height){
-            backgroundImage.size.height = frame.size.height
-        }
-        else if (backgroundImage.size.width < frame.size.width){
-            backgroundImage.size.width = frame.size.width
-        }
+        let ratio = frame.size.height / backgroundImage.size.height
+        backgroundImage.size.height = frame.size.height
+        backgroundImage.size.width = ratio * backgroundImage.size.width
+
+        // the background image should be the backwards-most layer
         backgroundImage.zPosition = -1000
         self.addChild(backgroundImage)
         
@@ -381,11 +384,18 @@ class GameScene: SKScene {
         })
     }
     
-    func showPopupLabel (_ text: String){
+    func showPopupLabel (_ text: String, _ isSmall: Bool = false){
         let popUpLabel = SKLabelNode(text: text)
-        popUpLabel.fontSize = CGFloat(defaultFontSize)
+        
         popUpLabel.fontName = defaultFontName
         popUpLabel.position = CGPoint(x: self.frame.width / 2, y: 1.75 * self.frame.height / 3)
+        
+        if (isSmall){
+            popUpLabel.fontSize = CGFloat(0.5 * defaultFontSize)
+        } else {
+            popUpLabel.fontSize = CGFloat(defaultFontSize)
+        }
+        
         self.addChild(popUpLabel)
         popUpLabel.run(getLabelPopupAnimation(), completion: {
             popUpLabel.removeFromParent()
@@ -411,7 +421,7 @@ class GameScene: SKScene {
         // or else give exp equal to the weapon's attack
         if (droppedWeapon.Attack > player.CurrentWeapon.Attack){
             player.CurrentWeapon = droppedWeapon
-            showPopupLabel("got weapon: " + droppedWeapon.Name)
+            showPopupLabel("got weapon: " + droppedWeapon.Name, true)
             self.updateWeaponUi()
         } else {
             giveExp(droppedWeapon.Attack)
@@ -429,6 +439,7 @@ class GameScene: SKScene {
     
     /// Generates a random point for the drop and creates a sprite of the dropped item at that point
     func handleDrop(_ droppedWeapon: Weapon){
+        
         dropItem = droppedWeapon
         
         // make sure there's no more than 1 drop at a time
@@ -449,19 +460,10 @@ class GameScene: SKScene {
         self.addChild(dropNode)
         
         // when the item drops, it will jump up and rotate and then go down while continuing to rotate
-        let moveUp = SKAction.moveBy(x: 0, y: 100, duration: 0.5)
-        let moveDown = SKAction.moveBy(x: 0, y: -100, duration: 0.5)
-        let rotate = SKAction.rotate(byAngle: 720 * .pi / 180, duration: 0.5)
-        
-        let firstGroup = SKAction.group([SKAction.sequence([moveUp, rotate])])
-        let dropActions = SKAction.sequence([firstGroup, moveDown])
-        dropNode.run(dropActions)
+        dropNode.run(EffectsHelper.getItemDropEffect())
         
         // make the drop sprite bob up and down until the player picks it up
-        let bobbingAction = SKAction.moveBy(x: 0, y: 10, duration: 0.5)
-        let reversed = bobbingAction.reversed()
-        let dropAnimationSequence = SKAction.sequence([bobbingAction, reversed])
-        dropNode.run(SKAction.repeatForever(dropAnimationSequence))
+        dropNode.run(SKAction.repeatForever(EffectsHelper.getItemDropAnimation()))
     }
     
     
@@ -476,7 +478,9 @@ class GameScene: SKScene {
         if (rng < monster.DropRate){
             print ("dropping item " + String(rng))
             let weapon =  monster.dropItem()
-            handleDrop(weapon)
+            if (weapon.Id != Weapon.GetEmptyWeapon().Id){
+                 handleDrop(weapon)
+            }
         }
         
         // get rid of the current monster
@@ -662,13 +666,13 @@ class GameScene: SKScene {
     
     func toggleSuperDamage(){
         player.ToggleSuperAttack()
-        showPopupLabel("Super damage: " + (player.HasSuperAttack ? "ON" : "OFF"))
+        showPopupLabel("Super damage: " + (player.HasSuperAttack ? "ON" : "OFF"), true)
         updateAttackLabel()
     }
     
     func toggleSuperExp(){
         player.ToggleSuperExp()
-        showPopupLabel("Super EXP: " + (player.HasSuperExp ? "ON" : "OFF"))
+        showPopupLabel("Super EXP: " + (player.HasSuperExp ? "ON" : "OFF"), true)
     }
     
     @objc func tap (recognizer: UIGestureRecognizer){

@@ -10,6 +10,10 @@ import Foundation
 import SpriteKit
 
 public class EffectsHelper{
+    private static func degreesToRadians(_ degrees: Double) -> Double{
+        return degrees * .pi / 180.0
+    }
+    
     public static func playSpriteAnimation(_ scene: SKScene, _ prefix: String, _ suffix: String, _ startingFrame: String, _ numberOfFrames: Int, _ frameDuration: Double, _ x: Double, y: Double, offset: Int = 0) -> SKSpriteNode {
         let animation = createSpriteAnimation(prefix, suffix, numberOfFrames, frameDuration, offset)
         let animationNode = SKSpriteNode(imageNamed: startingFrame)
@@ -26,6 +30,27 @@ public class EffectsHelper{
         }
         
         return SKAction.animate(with: frames, timePerFrame: frameDuration)
+    }
+    
+    /// Effect that happens right after an item is dropped
+    public static func getItemDropEffect() -> SKAction {
+        let moveUp = SKAction.moveBy(x: 0, y: 100, duration: 0.5)
+        let moveDown = SKAction.moveBy(x: 0, y: -100, duration: 0.5)
+        let rotate = SKAction.rotate(byAngle: CGFloat(degreesToRadians(720.0)), duration: 0.5)
+    
+        let firstGroup = SKAction.group([SKAction.sequence([moveUp, rotate])])
+        let dropActions = SKAction.sequence([firstGroup, moveDown])
+    
+        return dropActions
+    }
+    
+    /// Animation that happens until an item is picked up
+    public static func getItemDropAnimation() -> SKAction {
+        let bobbingAction = SKAction.moveBy(x: 0, y: 10, duration: 0.5)
+        let reversed = bobbingAction.reversed()
+        let dropAnimationSequence = SKAction.sequence([bobbingAction, reversed])
+        
+        return dropAnimationSequence
     }
     
 }
