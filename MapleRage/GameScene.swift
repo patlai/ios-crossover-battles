@@ -8,11 +8,16 @@ class GameScene: SKScene {
         static let uiBackground = CGFloat(-10)
         static let monsterNode = CGFloat(-20)
         static let specialAttackOverlay = CGFloat(-1)
+        static let playerExpBarBackground = CGFloat(1)
         static let playerExpBar = CGFloat(2)
         static let playerExpLabel = CGFloat(3)
         static let damageLabel = CGFloat(10)
         static let dropNode = CGFloat(11)
         static let levelUpAnimation = CGFloat(20)
+    }
+    
+    struct consts {
+        static let horizontalUiOffset = 10
     }
     
     let serialQueue = DispatchQueue(label: "queue")
@@ -61,7 +66,7 @@ class GameScene: SKScene {
     var playerLevelLabel = SKLabelNode()
     var playerAttackLabel = SKLabelNode()
     var playerExpLabel = SKLabelNode()
-    var playerExpBar = SKShapeNode()
+    var playerExpBar =  SKSpriteNode()//SKShapeNode()
     var killCountLabel = SKLabelNode()
     
     var currentWeaponIcon = SKSpriteNode()
@@ -123,11 +128,13 @@ class GameScene: SKScene {
         let uiBackgroundWidth = self.frame.width
         let uiBackgroundHeight = self.frame.height / 6
         let margin = 4
-        let horizontalOffset = 10
         
-        let uiBackground = SKShapeNode(rectOf: CGSize(width: uiBackgroundWidth, height: uiBackgroundHeight))
-        uiBackground.fillColor = SKColor.gray
+        let leftAlignPosition = -uiBackgroundWidth / 2 + CGFloat(consts.horizontalUiOffset)
+        
+
+        let uiBackground = SKSpriteNode(imageNamed: "images/ui/ui_background.png")
         uiBackground.position = CGPoint(x: self.frame.width / 2, y: self.frame.height / 12)
+      
         uiBackground.zPosition = zPositions.uiBackground
         
         self.addChild(monsterNameLabel)
@@ -145,7 +152,7 @@ class GameScene: SKScene {
         //playerLevelLabel.verticalAlignmentMode = .top
        
         playerLevelLabel.position = CGPoint(
-            x: -uiBackgroundWidth / 2 + CGFloat(horizontalOffset),
+            x: leftAlignPosition,
             y: uiBackgroundHeight / 4
         )
         uiBackground.addChild(playerLevelLabel)
@@ -155,20 +162,31 @@ class GameScene: SKScene {
         playerAttackLabel.fontSize = CGFloat(uiFontSize)
         playerAttackLabel.horizontalAlignmentMode = .left
         playerAttackLabel.position = CGPoint(
-            x: playerLevelLabel.position.x,
+            x: leftAlignPosition,
             y: playerLevelLabel.position.y - playerLevelLabel.fontSize - CGFloat(margin)
         )
         uiBackground.addChild(playerAttackLabel)
         
-        playerExpBar = SKShapeNode(rectOf: CGSize(
-            width: uiBackgroundWidth,
-            height: 20))
-        playerExpBar.fillColor = SKColor.yellow
+//        playerExpBar = SKShapeNode(rectOf: CGSize(
+//            width: uiBackgroundWidth,
+//            height: 20))
+//        playerExpBar.fillColor = SKColor.yellow
+        playerExpBar = SKSpriteNode(imageNamed: "images/ui/exp_bar.png")
+        playerExpBar.anchorPoint = CGPoint (x: 0, y: 0.5)
         playerExpBar.position = CGPoint(
-            x: 0,//playerLevelLabel.position.x + 50,
-            y: -10
+            x: leftAlignPosition + 2,//playerLevelLabel.position.x + 50,
+            y: -4
         )
+        playerExpBar.xScale = 0
         playerExpBar.zPosition = zPositions.playerExpBar
+        
+        let playerExpBarBackground = SKSpriteNode(imageNamed: "images/ui/exp_bar_background.png")
+        playerExpBarBackground.anchorPoint = CGPoint (x: 0, y: 0.5)
+        playerExpBarBackground.position = CGPoint(
+            x: leftAlignPosition,
+            y: -4
+        )
+        playerExpBarBackground.zPosition = zPositions.playerExpBarBackground
         
         playerExpLabel.fontSize = CGFloat(uiFontSize)
         playerExpLabel.fontName = defaultFontName
@@ -180,6 +198,7 @@ class GameScene: SKScene {
         playerExpLabel.zPosition = zPositions.playerExpLabel
         uiBackground.addChild(playerExpLabel)
         uiBackground.addChild(playerExpBar)
+        uiBackground.addChild(playerExpBarBackground)
         
         updateExpLabel()
         
@@ -366,11 +385,7 @@ class GameScene: SKScene {
     func updateExpLabel(){
         let scale = (CGFloat(player.CurrentExp) / CGFloat(player.ExpToNextLevel))
         playerExpLabel.text = String(player.CurrentExp) + " / " + String(player.ExpToNextLevel)
-        playerExpBar.xScale = scale
-        playerExpBar.position = CGPoint(
-            x: -self.frame.width / 2 + (scale * self.frame.width / 2) + 10,
-            y: 0
-        )
+        playerExpBar.xScale = scale * (self.frame.width - CGFloat(2) * CGFloat(consts.horizontalUiOffset)) / 24
     }
     
     func updateAttackLabel(){
@@ -460,7 +475,7 @@ class GameScene: SKScene {
         
         let W = self.frame.width
         let H = self.frame.height
-        let dropBounds = CGRect(x: 0.1 * W, y: 0.1 * H, width: 0.8 * W, height: 0.6 * H)
+        let dropBounds = CGRect(x: 0.1 * W, y: 0.3 * H, width: 0.8 * W, height: 0.6 * H)
         
         dropNode = SKSpriteNode(imageNamed: droppedWeapon.Icon)
         dropNode.zPosition = zPositions.dropNode
