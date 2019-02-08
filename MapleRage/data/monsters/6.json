@@ -1,0 +1,20 @@
+{
+    "name": "Ultra Instinct Shaggy",
+    "id": 6,
+    "hitpoints": 1000000,
+    "animationPrefix": "sprites/shaggy/s",
+    "animationSuffix": ".png",
+    "deathAnimationPrefix": "sprites/shaggy/die",
+    "deathAnimationSuffix": ".png",
+    "defaultAnimation": "sprites/shaggy/s0.png",
+    "hitAnimation": "sprites/shaggy/s_hit.png",
+    "damageSound": "sound/mushroom_damage.mp3",
+    "deathSound": "sound/mushroom_death.mp3",
+    "numberOfAnimationFrames": 6,
+    "numberOfDeathAnimationFrames": 3,
+    "moveSpeed": 5,
+    "defense": 30,
+    "exp": 100000,
+    "dropRate": 1.0,
+    "drops": [2]
+}

@@ -1,0 +1,20 @@
+{
+    "name": "Green Slime",
+    "id": 2,
+    "hitpoints": 2500,
+    "animationPrefix": "sprites/green_slime/s",
+    "animationSuffix": ".png",
+    "deathAnimationPrefix": "sprites/green_slime/die",
+    "deathAnimationSuffix": ".png",
+    "defaultAnimation": "sprites/green_slime/s0.png",
+    "hitAnimation": "sprites/green_slime/hit0.png",
+    "damageSound": "sprites/green_slime/damage.mp3",
+    "deathSound": "sprites/green_slime/die.mp3",
+    "numberOfAnimationFrames": 7,
+    "numberOfDeathAnimationFrames": 4,
+    "moveSpeed": 3,
+    "defense": 30,
+    "exp": 80,
+    "dropRate": 0.5,
+    "drops": [0, 1]
+}

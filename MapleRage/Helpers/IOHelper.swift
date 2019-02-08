@@ -53,4 +53,14 @@ class IOHelper{
         }
     }
     
+    
+    public static func GetFilePathsWithoutExtension(_ path: String) -> [String]{
+        let fileNames = GetFileNames(path)
+        var paths: Array<String> = Array()
+        for name in fileNames {
+            paths.append(path + "/" + NSString(string: name).deletingPathExtension)
+        }
+        return paths
+    }
+    
 }

@@ -1,0 +1,20 @@
+{
+    "name": "Stump",
+    "id": 1,
+    "hitpoints": 2750,
+    "animationPrefix": "sprites/stump/s",
+    "animationSuffix": ".png",
+    "deathAnimationPrefix": "sprites/stump/s_die",
+    "deathAnimationSuffix": ".png",
+    "defaultAnimation": "sprites/stump/s0.png",
+    "hitAnimation": "sprites/stump/s_hit.png",
+    "damageSound": "sprites/stump/damage.mp3",
+    "deathSound": "sprites/stump/die.mp3",
+    "numberOfAnimationFrames": 4,
+    "numberOfDeathAnimationFrames": 3,
+    "moveSpeed": 3,
+    "defense": 50,
+    "exp": 100,
+    "dropRate": 0.5,
+    "drops": [0, 1]
+}

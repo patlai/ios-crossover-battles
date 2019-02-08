@@ -1,0 +1,20 @@
+{
+    "name": "Stone Golem",
+    "id": 3,
+    "hitpoints": 4500,
+    "animationPrefix": "sprites/stone_golem/s",
+    "animationSuffix": ".png",
+    "deathAnimationPrefix": "sprites/stone_golem/die",
+    "deathAnimationSuffix": ".png",
+    "defaultAnimation": "sprites/stone_golem/s0.png",
+    "hitAnimation": "sprites/stone_golem/hit0.png",
+    "damageSound": "sprites/stone_golem/damage.mp3",
+    "deathSound": "sprites/stone_golem/die.mp3",
+    "numberOfAnimationFrames": 4,
+    "numberOfDeathAnimationFrames": 7,
+    "moveSpeed": 3,
+    "defense": 50,
+    "exp": 120,
+    "dropRate": 0.5,
+    "drops": [0, 1]
+}

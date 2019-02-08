@@ -37,14 +37,11 @@ public class Level{
         self.Monsters = monsters
     }
     
+    
     public static func getLevelFiles() -> Array<String> {
-        let fileNames = IOHelper.GetFileNames(LevelDataDirectory)
-        var paths: Array<String> = Array()
-        for name in fileNames {
-            paths.append(LevelDataDirectory + "/" + NSString(string: name).deletingPathExtension)
-        }
-        return paths
+        return IOHelper.GetFilePathsWithoutExtension(LevelDataDirectory)
     }
+    
     
     /// Loads level data from a JSON file
     public static func LoadLevelFromJSON(_ path: String) -> Level? {
@@ -56,14 +53,15 @@ public class Level{
             let bgi = levelData["backgroundImage"] as? String ?? ""
             let icon = levelData["icon"] as? String ?? ""
             let killsRequired = levelData["killsRequired"] as? Int ?? 10
+            let monsterIds = levelData["monsters"] as? [Int] ?? []
+            var monsters: [Monster] = Array()
             
-            let monsterData = levelData["monsters"]
-            if let monsters = monsterData as? [Dictionary<String, AnyObject>] {
-                let monsterObjects = ParseMonsterData(monsters)
-                return Level(name, bgm, bgi, icon, killsRequired, monsterObjects)
-            } else {
-                print("level contains no valid monsters")
+            for id in monsterIds {
+                monsters.append(GameController.Shared.LoadMonsterFromJson(id))
             }
+            
+            return Level (name, bgm, bgi, icon, killsRequired, monsters)
+            
         } else{
             print("unable to parse level data")
         }

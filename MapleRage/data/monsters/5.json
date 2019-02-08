@@ -1,0 +1,20 @@
+{
+    "name": "Ribbon Pig",
+    "id": 5,
+    "hitpoints": 3000,
+    "animationPrefix": "sprites/ribbon_pig/s",
+    "animationSuffix": ".png",
+    "deathAnimationPrefix": "sprites/ribbon_pig/die",
+    "deathAnimationSuffix": ".png",
+    "defaultAnimation": "sprites/ribbon_pig/s0.png",
+    "hitAnimation": "sprites/ribbon_pig/hit0.png",
+    "damageSound": "sprites/ribbon_pig/damage.mp3",
+    "deathSound": "sprites/ribbon_pig/die.mp3",
+    "numberOfAnimationFrames": 3,
+    "numberOfDeathAnimationFrames": 3,
+    "moveSpeed": 4,
+    "defense": 50,
+    "exp": 85,
+    "dropRate": 0.5,
+    "drops": [0, 1]
+}

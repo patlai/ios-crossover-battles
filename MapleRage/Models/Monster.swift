@@ -10,6 +10,7 @@ import Foundation
 import SpriteKit
 
 class Monster{
+    var Id: Int = -1
     var Name: String
     var MaxHP: Double = 0.0
     var CurrentHP: Double = 0.0
@@ -27,6 +28,7 @@ class Monster{
     
     var DropRate: Double = 0.0
     var DropRarity: Double = 0.0
+    var Drops: [Int] = []
     
     var Width: CGFloat = 256.0
     var Height: CGFloat = 256.0
@@ -54,6 +56,7 @@ class Monster{
     
     init (
         _ Name: String,
+        _ Id: Int,
         _ MaxHP: Double,
         _ StartingFrame: String,
         _ DefaultAnimation: SKAction,
@@ -65,10 +68,11 @@ class Monster{
         _ defense: Int = 0,
         _ exp: Int = 0,
         _ dropRate: Double = 0.0,
-        _ dropRarity: Double = 0.0,
+        _ drops: [Int] = [],
         _ hasVerticalMovement: Bool = false)
     {
         self.Name = Name
+        self.Id = Id
         self.MaxHP = MaxHP
         self.CurrentHP = MaxHP
         self.DefaultAnimation = DefaultAnimation
@@ -83,7 +87,7 @@ class Monster{
         self.Exp = exp
         
         self.DropRate = dropRate
-        self.DropRarity = dropRarity
+        self.Drops = drops
         
         self.Width = self.Node.size.width
         self.Height = self.Node.size.height
@@ -115,16 +119,11 @@ class Monster{
     
     
     public func dropItem() -> Weapon {
-        let rarity = Double.random(in: 0.0 ..< self.DropRarity)
         var rand = Int.random(in: 0 ..< GameController.Shared.Weapons.count)
         
-        // try 10 times -> or else return empty
-        for _ in 0 ..< 10 {
-            rand = Int.random(in: 0 ..< GameController.Shared.Weapons.count)
-            if (GameController.Shared.Weapons[rand].DropRate > rarity){
-                print("got weapon: " + GameController.Shared.Weapons[rand].Name)
-                return GameController.Shared.Weapons[rand]
-            }
+        if (self.Drops.count > 0){
+            rand = Int.random(in: 0 ..< self.Drops.count)
+            return GameController.Shared.GetWeaponById(self.Drops[rand])
         }
         
         return Weapon.GetEmptyWeapon()
@@ -134,6 +133,7 @@ class Monster{
     /// Loads a monster from a dictionary containing monster data
     public static func loadData(_ data: Dictionary<String, AnyObject>) -> Monster {
         let name = data["name"] as? String ?? ""
+        let id = data["id"] as? Int ?? -1
         let hp = Double(data["hitpoints"] as? Int ?? 0)
         let animationPrefix = data["animationPrefix"] as? String ?? ""
         let animationSuffix = data["animationSuffix"] as? String ?? ""
@@ -149,10 +149,11 @@ class Monster{
         let defense = data["defense"] as? Int ?? 0
         let exp = data["exp"] as? Int ?? 0
         let dropRate = data["dropRate"] as? Double ?? 0.0
-        let dropRarity = data["dropRarity"] as? Double ?? 0.0
+        let drops = data["drops"] as? [Int] ?? []
         
         let monst = Monster(
             name,
+            id,
             hp,
             startingFrame,
             Monster.getDefaultAnimation(animationPrefix, animationSuffix, numberOfAnimationFrames, 0.2),
@@ -164,7 +165,7 @@ class Monster{
             defense,
             exp,
             dropRate,
-            dropRarity
+            drops
         )
         
         return monst

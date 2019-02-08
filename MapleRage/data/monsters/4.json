@@ -1,0 +1,20 @@
+{
+    "name": "Red Snail",
+    "id": 4,
+    "hitpoints": 1500,
+    "animationPrefix": "sprites/red_snail/s",
+    "animationSuffix": ".png",
+    "deathAnimationPrefix": "sprites/red_snail/die",
+    "deathAnimationSuffix": ".png",
+    "defaultAnimation": "sprites/red_snail/s0.png",
+    "hitAnimation": "sprites/red_snail/hit0.png",
+    "damageSound": "sprites/red_snail/damage.mp3",
+    "deathSound": "sprites/red_snail/die.mp3",
+    "numberOfAnimationFrames": 4,
+    "numberOfDeathAnimationFrames": 3,
+    "moveSpeed": 1,
+    "defense": 30,
+    "exp": 60,
+    "dropRate": 0.5,
+    "drops": [0, 1]
+}

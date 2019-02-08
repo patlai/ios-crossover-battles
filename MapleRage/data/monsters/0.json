@@ -1,0 +1,20 @@
+{
+    "name": "Mushmom",
+    "id": 0,
+    "hitpoints": 5000,
+    "animationPrefix": "mushroom/f",
+    "animationSuffix": ".png",
+    "deathAnimationPrefix": "mushroom/die",
+    "deathAnimationSuffix": ".png",
+    "defaultAnimation": "mushroom/f0.png",
+    "hitAnimation": "mushroom/f_hit.png",
+    "damageSound": "sound/mushroom_damage.mp3",
+    "deathSound": "sound/mushroom_death.mp3",
+    "numberOfAnimationFrames": 6,
+    "numberOfDeathAnimationFrames": 6,
+    "moveSpeed": 5,
+    "defense": 30,
+    "exp": 150,
+    "dropRate": 0.5,
+    "drops": [0, 1, 2]
+}

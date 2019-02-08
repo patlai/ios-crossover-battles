@@ -12,18 +12,13 @@ class GameScene: SKScene {
             loadCurrentLevel()
         }
     }
+    
     var controller = GameViewController()
     
     var canHitMonster: Bool = true
     var hitFeedback = false
     
-    var monsters: [Monster] = Array()
-    var currentMonster = Monster()
-    var currentMonsterIndex = 0
-    var currentLevel = Level()
-    var levelFiles = Level.getLevelFiles()
-    var levelIcons: [String] = Array()
-    
+
     //let monsterNode = SKSpriteNode(imageNamed: "mushroom/f0.png")
     let monsterNode = SKSpriteNode()
     var defaultMonsterAnimation = SKAction()
@@ -208,13 +203,16 @@ class GameScene: SKScene {
         self.addChild(levelUpButton)
         
         updateWeaponUi()
-        currentWeaponLabel.fontName = defaultFontName
-        currentWeaponLabel.fontSize = CGFloat(uiFontSize)
-        currentWeaponLabel.position = CGPoint(x: 64, y: 32)
+
         self.addChild(currentWeaponLabel)
     }
     
     func updateWeaponUi(){
+        
+        currentWeaponLabel.fontName = defaultFontName
+        currentWeaponLabel.fontSize = CGFloat(uiFontSize)
+        currentWeaponLabel.horizontalAlignmentMode = .left
+        currentWeaponLabel.position = CGPoint(x: 64, y: 32)
         currentWeaponLabel.text = player.CurrentWeapon.Name
         updateAttackLabel()
         
@@ -239,13 +237,13 @@ class GameScene: SKScene {
         monsterNameLabel.position = CGPoint(x: frame.width / 2, y: 11 * frame.height / 12)
         
         // remove the last monster from the scene if there was one
-        currentMonster.Node.removeFromParent()
-        currentMonster.Node.zPosition = -20
+        gameController.currentMonster.Node.removeFromParent()
+        gameController.currentMonster.Node.zPosition = -20
         monster.CurrentHP = monster.MaxHP
         monster.Position = location
         self.addChild(monster.Node)
         monster.Node.run(SKAction.repeatForever(monster.DefaultAnimation))
-        currentMonster = monster
+        gameController.currentMonster = monster
     }
     
     /// Loads the files containing level data from the level data directory
@@ -253,7 +251,7 @@ class GameScene: SKScene {
         
     }
     
-    
+
     /// Loads a level and its sprites into the game scene
     func loadLevel(_ level: Level, _ location: CGPoint){
         levelNameLabel.text = level.Name
@@ -280,10 +278,10 @@ class GameScene: SKScene {
         
         loadMonster(level.Monsters[Int.random(in: 0 ..< level.Monsters.count)], location)
         
-        currentLevel = level
+        gameController.currentLevel = level
         
-        if (!levelIcons.contains(level.IconPath)){
-            levelIcons.append(level.IconPath)
+        if (!gameController.levelIcons.contains(level.IconPath)){
+            gameController.levelIcons.append(level.IconPath)
         }
     }
     
@@ -294,12 +292,12 @@ class GameScene: SKScene {
         player.CurrentWeapon = gameController.GetDefaultWeapon()
         loadUi(view)
 
-        if (self.levelFiles.count <= 0){
+        if (gameController.levelFiles.count <= 0){
             print("no level data found")
             exit(1)
         }
         
-        player.CompletedLevels = Array(repeating: false, count: self.levelFiles.count)
+        player.CompletedLevels = Array(repeating: false, count: gameController.levelFiles.count)
         
          // load the first level from JSON data
         currentLevelNumber =  0
@@ -348,8 +346,8 @@ class GameScene: SKScene {
             hitNode.removeFromParent()
         })
         
-        playSound(sound: currentMonster.DamageSound)
-        currentMonster.Node.run(currentMonster.DamageAnimation)
+        playSound(sound: gameController.currentMonster.DamageSound)
+        gameController.currentMonster.Node.run(gameController.currentMonster.DamageAnimation)
     }
     
     func updateExpLabel(){
@@ -473,8 +471,8 @@ class GameScene: SKScene {
         let amount = Int(Double(monster.Exp) * player.ExpRate)
         giveExp(amount)
         
+        // check whether or not the monster will drop an item
         let rng = Double.random(in: 0.0 ... 1.0)
-        print(rng)
         if (rng < monster.DropRate){
             print ("dropping item " + String(rng))
             let weapon =  monster.dropItem()
@@ -489,17 +487,17 @@ class GameScene: SKScene {
             monster.Node.removeFromParent()
             
             // load the next monster
-            self.currentMonsterIndex = Int.random(in: 0 ..< self.currentLevel.Monsters.count)
+            self.gameController.currentMonsterIndex = Int.random(in: 0 ..< self.gameController.currentLevel.Monsters.count)
             self.monsterHPLabel.text = ""
-            if (self.player.NumberOfKills < self.currentLevel.KillsRequired
+            if (self.player.NumberOfKills < self.gameController.currentLevel.KillsRequired
                 || self.player.CompletedLevels[self.currentLevelNumber]
-                || self.currentLevelNumber >= self.levelFiles.count - 1){
+                || self.currentLevelNumber >= self.gameController.levelFiles.count - 1){
                 // there are still monsters in the current level
                 // or the level is already complete and the player is revisiting it
                 // or there are no more levels to load
                 // -> spawn the next monster
                 self.loadMonster(
-                    self.currentLevel.Monsters[self.currentMonsterIndex],
+                    self.gameController.currentLevel.Monsters[self.gameController.currentMonsterIndex],
                     CGPoint( x: self.frame.width / 2, y: self.frame.height / 2)
                 )
             } else {
@@ -516,19 +514,19 @@ class GameScene: SKScene {
     
     
     func canLoadPreviousLevel() -> Bool {
-        return currentLevelNumber > 0 && currentLevelNumber < levelFiles.count
+        return currentLevelNumber > 0 && currentLevelNumber < gameController.levelFiles.count
     }
     
     
     func canLoadNextLevel() -> Bool {
-        return currentLevelNumber < levelFiles.count - 1 && currentLevelNumber < levelIcons.count - 1
+        return currentLevelNumber < gameController.levelFiles.count - 1 && currentLevelNumber < gameController.levelIcons.count - 1
     }
     
     
     func loadCurrentLevel(){
         // insert previous level button
         if (canLoadPreviousLevel()){
-            previousLevelButton = SKSpriteNode(imageNamed: levelIcons[currentLevelNumber - 1])
+            previousLevelButton = SKSpriteNode(imageNamed: gameController.levelIcons[currentLevelNumber - 1])
             previousLevelButton.position = CGPoint(x: 16, y: self.frame.height / 3)
             self.addChild(previousLevelButton)
         } else {
@@ -537,7 +535,7 @@ class GameScene: SKScene {
         
         // insert next level button
         if (canLoadNextLevel()){
-            nextLevelButton = SKSpriteNode(imageNamed: levelIcons[currentLevelNumber + 1])
+            nextLevelButton = SKSpriteNode(imageNamed: gameController.levelIcons[currentLevelNumber + 1])
             nextLevelButton.position = CGPoint(x: self.frame.width - 16, y: self.frame.height / 3)
             self.addChild(nextLevelButton)
         } else {
@@ -545,7 +543,7 @@ class GameScene: SKScene {
         }
         
         print ("loading level: " + String(currentLevelNumber))
-        if let level = Level.LoadLevelFromJSON(self.levelFiles[self.currentLevelNumber]){
+        if let level = Level.LoadLevelFromJSON(self.gameController.levelFiles[self.currentLevelNumber]){
             let center = CGPoint(
                 x: self.frame.width / 2,
                 y: self.frame.height / 2
@@ -556,8 +554,8 @@ class GameScene: SKScene {
     
     
     func dealDamageToMonster(_ monster: Monster, _ damage: Double, _ point: CGPoint, _ isCrit: Bool, _ label: SKLabelNode){
-        currentMonster.CurrentHP = max(0, currentMonster.CurrentHP - damage)
-        updateMonsterHPLabel(monsterHPLabel, currentMonster)
+        gameController.currentMonster.CurrentHP = max(0, gameController.currentMonster.CurrentHP - damage)
+        updateMonsterHPLabel(monsterHPLabel, gameController.currentMonster)
         
         label.text = String(Int(damage))
         if (isCrit){
@@ -566,8 +564,8 @@ class GameScene: SKScene {
             label.fontSize *= 1.5
         }
         
-        if (currentMonster.CurrentHP <= 0){
-            handleDeath(currentMonster)
+        if (gameController.currentMonster.CurrentHP <= 0){
+            handleDeath(gameController.currentMonster)
         }
         
         showHitAnimation(point)
@@ -645,7 +643,7 @@ class GameScene: SKScene {
                 self.animateDamageLabel(damageLabel)
                 
                 self.addChild(genesisSkyNode2)
-                self.dealDamageToMonster(self.currentMonster, 9999999.0, center, true, damageLabel)
+                self.dealDamageToMonster(self.gameController.currentMonster, 9999999.0, center, true, damageLabel)
                 genesisSkyNode2.run(genesisSkyAnimation2, completion:{
                     genesisSkyNode2.removeFromParent()
                 })
@@ -682,7 +680,7 @@ class GameScene: SKScene {
             var tappedButton = true
             
             if(specialAttackButton.frame.contains(tapLocation)){
-                handleSpecialAttack(currentMonster, tapLocation)
+                handleSpecialAttack(gameController.currentMonster, tapLocation)
             } else if (superDamageButton.frame.contains(tapLocation)){
                 toggleSuperDamage()
             } else if (superExpButton.frame.contains(tapLocation) ){
@@ -698,7 +696,7 @@ class GameScene: SKScene {
             } else if (dropNode.frame.contains(tapLocation)){
                 pickUpItem(dropItem)
             } else {
-                self.handleHit(currentMonster, tapLocation)
+                self.handleHit(gameController.currentMonster, tapLocation)
                 tappedButton = false
             }
             
